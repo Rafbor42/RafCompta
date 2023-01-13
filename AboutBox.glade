@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkAboutDialog" id="AboutBox">
+    <property name="can-focus">False</property>
+    <property name="modal">True</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="type-hint">dialog</property>
+    <property name="program-name">RafCompta</property>
+    <property name="copyright" translatable="yes">(c) Raphaël Borrelli (@Rafbor)</property>
+    <property name="comments" translatable="yes">Gestion de comptabilité personnelle simplifiée.
+Pour qui veut simplement suivre ses recettes et dépenses journalières, en attendant qu'elles apparaissent sur le compte en banque.</property>
+    <property name="authors">Raphaël Borrelli (@Rafbor)
+    https://github.com/Rafbor42/RafCompta</property>
+    <property name="artists">ddarahttps://www.flaticon.com/fr/auteurs/ddara</property>
+    <property name="logo">comptabilite.png</property>
+    <property name="license-type">gpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="btnBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">start</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

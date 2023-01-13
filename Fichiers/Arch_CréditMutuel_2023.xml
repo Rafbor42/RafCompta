@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Données_RafComptes>
+  <Opérations>
+    <Opération>
+      <ModePaiement>CB</ModePaiement>
+      <Date>03/01/2023</Date>
+      <Libellé>Intermarché: carburant</Libellé>
+      <Crédit>0</Crédit>
+      <Débit>65</Débit>
+    </Opération>
+    <Opération>
+      <ModePaiement>CB</ModePaiement>
+      <Date>04/01/2023</Date>
+      <Libellé>Carrefour Market</Libellé>
+      <Crédit>0</Crédit>
+      <Débit>124,5</Débit>
+    </Opération>
+    <Opération>
+      <ModePaiement>Virement</ModePaiement>
+      <Date>11/01/2023</Date>
+      <Libellé>Transfert CC vers Livret A</Libellé>
+      <Crédit>0</Crédit>
+      <Débit>500</Débit>
+    </Opération>
+    <Opération>
+      <ModePaiement>Virement</ModePaiement>
+      <Date>12/01/2023</Date>
+      <Libellé>Remboursement frais de déplacement festival BD</Libellé>
+      <Crédit>32</Crédit>
+      <Débit>0</Débit>
+    </Opération>
+  </Opérations>
+</Données_RafComptes>

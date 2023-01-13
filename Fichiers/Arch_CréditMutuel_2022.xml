@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Données_RafCompta>
+  <Opérations>
+    <Opération>
+      <ModePaiement>CB</ModePaiement>
+      <Date>21/12/2022</Date>
+      <Libellé>Cultura: cadeaux de Noël pour petits enfants</Libellé>
+      <Crédit>0</Crédit>
+      <Débit>89</Débit>
+    </Opération>
+  </Opérations>
+</Données_RafCompta>

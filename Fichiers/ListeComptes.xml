@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Données_RafCompta>
+  <Comptes>
+    <Compte>
+      <NomCompte>CréditMutuel</NomCompte>
+      <SoldeInitial>1409,56</SoldeInitial>
+    </Compte>
+    <Compte>
+      <NomCompte>Boursorama</NomCompte>
+      <SoldeInitial>2500</SoldeInitial>
+    </Compte>
+  </Comptes>
+</Données_RafCompta>

@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-find</property>
+  </object>
+  <object class="GtkImage" id="image10">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-ok</property>
+  </object>
+  <object class="GtkImage" id="image11">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-open</property>
+  </object>
+  <object class="GtkImage" id="image12">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="image13">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-find</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-remove</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-remove</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-edit</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-remove</property>
+  </object>
+  <object class="GtkImage" id="image9">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-edit</property>
+  </object>
+  <object class="GtkWindow" id="MainWindow">
+    <property name="width-request">790</property>
+    <property name="height-request">540</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox" id="boxConteneur1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkMenuBar" id="menuStrip1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <object class="GtkMenuItem" id="mnuFichier">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Fichier</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuFichierOuvrir">
+                        <property name="label">gtk-open</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Ouvre le fichier du compte courant</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuFichierEnregistrer">
+                        <property name="label">gtk-save</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Sauvegarde tous le fichiers</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuFichierConsultArchive">
+                        <property name="label" translatable="yes">Consulter archive</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Consulter les archives du compte courant</property>
+                        <property name="image">image1</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuFichierQuitter">
+                        <property name="label">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="mnuActions">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Actions</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionsAjouterCompte">
+                        <property name="label" translatable="yes">Ajouter compte</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image2</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionSupprimerCompte">
+                        <property name="label" translatable="yes">Supprimer compte</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image3</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionAjouterOperation">
+                        <property name="label" translatable="yes">Ajouter opération</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image4</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionSupprimerOperation">
+                        <property name="label" translatable="yes">Supprimer opération</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image5</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionModifierOperation">
+                        <property name="label" translatable="yes">Modifier opération</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image6</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="mnuPoint">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">?</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuPointAide">
+                        <property name="label">gtk-help</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuPointAPropos">
+                        <property name="label">gtk-about</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFixed">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">4</property>
+            <property name="margin-end">4</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="width-request">120</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Compte courant</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">487</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="cbListeComptes">
+                <property name="width-request">180</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+              </object>
+              <packing>
+                <property name="x">609</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnOuvrir">
+                <property name="width-request">34</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Ouvre le fichier du compte courant</property>
+                <property name="image">image11</property>
+                <property name="always-show-image">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnEnregistrer">
+                <property name="width-request">34</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Sauvegarde tous le fichiers</property>
+                <property name="image">image12</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">37</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnConsulterArchives">
+                <property name="width-request">34</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Consulter les archives du compte courant</property>
+                <property name="image">image13</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">74</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkNotebook" id="tabControl1">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="scrollable">True</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <child>
+                  <object class="GtkTreeView" id="trvOperations">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="headers-clickable">False</property>
+                    <property name="rules-hint">True</property>
+                    <property name="enable-grid-lines">both</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Opérations</property>
+              </object>
+              <packing>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFixed" id="fixConteneur1">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkCheckButton" id="chkChargerFichierAuto">
+                    <property name="label" translatable="yes">Charger le fichier après sélection du compte</property>
+                    <property name="width-request">321</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="draw-indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="x">150</property>
+                    <property name="y">178</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">105</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Solde initial (€)</property>
+                    <property name="xalign">0.949999988079071</property>
+                  </object>
+                  <packing>
+                    <property name="x">379</property>
+                    <property name="y">36</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="txtSoldeInitial">
+                    <property name="width-request">120</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="width-chars">10</property>
+                  </object>
+                  <packing>
+                    <property name="x">486</property>
+                    <property name="y">36</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lblCompteCourant">
+                    <property name="width-request">109</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Compte courant</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="underline" value="True"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">14</property>
+                    <property name="y">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">108</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Nom du compte</property>
+                  </object>
+                  <packing>
+                    <property name="x">35</property>
+                    <property name="y">36</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">125</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Fichier de données</property>
+                  </object>
+                  <packing>
+                    <property name="x">18</property>
+                    <property name="y">72</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">116</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Fichiers d'archives</property>
+                  </object>
+                  <packing>
+                    <property name="x">23</property>
+                    <property name="y">108</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="txtNomCompte">
+                    <property name="width-request">210</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="editable">False</property>
+                  </object>
+                  <packing>
+                    <property name="x">152</property>
+                    <property name="y">36</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="txtNomFichierCompte">
+                    <property name="width-request">210</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="editable">False</property>
+                  </object>
+                  <packing>
+                    <property name="x">152</property>
+                    <property name="y">72</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="txtNomFichierArchives">
+                    <property name="width-request">280</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="editable">False</property>
+                  </object>
+                  <packing>
+                    <property name="x">152</property>
+                    <property name="y">108</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="chkSauverFichierAuto">
+                    <property name="label" translatable="yes">Sauvegarder le fichier de comptes à la fermeture</property>
+                    <property name="width-request">352</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="draw-indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="x">150</property>
+                    <property name="y">205</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="chkArchiverLigneRappro">
+                    <property name="label" translatable="yes">Archiver les lignes rapprochées</property>
+                    <property name="width-request">352</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="draw-indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="x">150</property>
+                    <property name="y">234</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lblCompteCourant1">
+                    <property name="width-request">109</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Paramètres globaux</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="underline" value="True"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">14</property>
+                    <property name="y">144</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">100</property>
+                    <property name="height-request">34</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">(1 fichier par année)</property>
+                  </object>
+                  <packing>
+                    <property name="x">435</property>
+                    <property name="y">108</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Paramètres</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child type="tab">
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFixed">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">4</property>
+            <property name="margin-end">4</property>
+            <property name="margin-top">4</property>
+            <property name="margin-bottom">4</property>
+            <child>
+              <object class="GtkButton" id="btnAjouter">
+                <property name="label" translatable="yes">Ajouter opération</property>
+                <property name="width-request">218</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Ajouter une opération</property>
+                <property name="image">image7</property>
+                <property name="xalign">0.5</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">570</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnSupprimer">
+                <property name="label" translatable="yes">Supprimer</property>
+                <property name="width-request">104</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Supprimer l'opération sélectionnée</property>
+                <property name="image">image8</property>
+                <property name="xalign">0.5</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">570</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnModifier">
+                <property name="label" translatable="yes">Modifier</property>
+                <property name="width-request">108</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Modifier l'opération sélectionnée</property>
+                <property name="image">image9</property>
+                <property name="xalign">0.5</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">680</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtSolde">
+                <property name="width-request">100</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Solde du compte courant (solde initial + crédits - débits de toutes les lignes)</property>
+                <property name="halign">start</property>
+                <property name="editable">False</property>
+                <property name="max-length">12</property>
+                <property name="width-chars">12</property>
+                <property name="max-width-chars">12</property>
+              </object>
+              <packing>
+                <property name="x">78</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width-request">71</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Solde (€)</property>
+                <property name="single-line-mode">True</property>
+                <property name="track-visited-links">False</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtSoldeBanque">
+                <property name="width-request">100</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Solde de la banque</property>
+                <property name="max-length">12</property>
+                <property name="width-chars">12</property>
+                <property name="max-width-chars">12</property>
+              </object>
+              <packing>
+                <property name="x">78</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width-request">71</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Banque (€)</property>
+                <property name="single-line-mode">True</property>
+                <property name="track-visited-links">False</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">5</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblEcart">
+                <property name="width-request">60</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Ecart (€)</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">282</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtEcart">
+                <property name="width-request">100</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Ecart entre le solde banque et le solde initial du compte, + débits - crédits des lignes sélectionnées</property>
+                <property name="halign">start</property>
+                <property name="editable">False</property>
+                <property name="max-length">12</property>
+                <property name="width-chars">12</property>
+                <property name="max-width-chars">12</property>
+              </object>
+              <packing>
+                <property name="x">345</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnRapprocher">
+                <property name="label" translatable="yes">Rapprocher</property>
+                <property name="width-request">170</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Rapprocher les lignes sélectionnées</property>
+                <property name="image">image10</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">290</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="txtInfo">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="editable">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
