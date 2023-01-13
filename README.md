@@ -122,3 +122,10 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 * Archive _tar.xz_ sans le Runtime _.NET 6_: [v1.3.0113.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0113.1_sans_runtime.tar.xz)
 * Archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.3.0113.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0113.1_avec_runtime.tar.xz)
+
+Sur Linux:
+* décompresser l'archive et se positionner dans le dossier.
+* rendre exécutable le fichier _RafCompta_:
+```chmod +x RafCompta```
+* lancer l'application:
+```./RafCompta```
