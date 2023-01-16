@@ -161,6 +161,10 @@ namespace RafCompta
 					}
 				}
 			}
+			catch (FileNotFoundException)
+			{
+				Global.FichierCompteNonTrouve = true;
+			}
 			catch (Exception ex)
 			{
 				strMsg += ex.Message;

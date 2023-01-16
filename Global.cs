@@ -59,6 +59,7 @@ namespace RafCompta
 		static bool bChargeFichierAuto;
 		static bool bSauveFichierAuto;
 		static bool bArchiveLigneRappro;
+		static bool bFichierCompteNonTrouve;
 		//
 		static bool bConfigModified;
 		static bool bListeComptesModified;
@@ -80,6 +81,7 @@ namespace RafCompta
         public static bool ListeComptesModified { get => bListeComptesModified; set => bListeComptesModified = value; }
         public static bool SauveFichierAuto { get => bSauveFichierAuto; set => bSauveFichierAuto = value; }
         public static bool ArchiveLigneRappro { get => bArchiveLigneRappro; set => bArchiveLigneRappro = value; }
+        public static bool FichierCompteNonTrouve { get => bFichierCompteNonTrouve; set => bFichierCompteNonTrouve = value; }
 
         public enum eTrvOperationsCols
 		{
@@ -112,6 +114,7 @@ namespace RafCompta
 			ChargeFichierAuto = true;
 			SauveFichierAuto = false;
 			ArchiveLigneRappro = true;
+			FichierCompteNonTrouve = false;
 			//
 			ConfigModified = false;
 			ListeComptesModified = false;

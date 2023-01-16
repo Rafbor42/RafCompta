@@ -12,11 +12,6 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-ok</property>
   </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="stock">gtk-open</property>
-  </object>
   <object class="GtkImage" id="image12">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -90,22 +85,11 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuFichierOuvrir">
-                        <property name="label">gtk-open</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Ouvre le fichier du compte courant</property>
-                        <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
-                        <property name="always-show-image">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkImageMenuItem" id="mnuFichierEnregistrer">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Sauvegarde tous le fichiers</property>
+                        <property name="tooltip-text" translatable="yes">Sauvegarde tous les fichiers du compte courant</property>
                         <property name="use-underline">True</property>
                         <property name="use-stock">True</property>
                         <property name="always-show-image">True</property>
@@ -288,31 +272,16 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btnOuvrir">
-                <property name="width-request">34</property>
-                <property name="height-request">34</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Ouvre le fichier du compte courant</property>
-                <property name="image">image11</property>
-                <property name="always-show-image">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="btnEnregistrer">
                 <property name="width-request">34</property>
                 <property name="height-request">34</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Sauvegarde tous le fichiers</property>
+                <property name="tooltip-text" translatable="yes">Sauvegarde tous les fichiers du compte courant</property>
                 <property name="image">image12</property>
                 <property name="always-show-image">True</property>
               </object>
-              <packing>
-                <property name="x">37</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="btnConsulterArchives">
@@ -326,7 +295,7 @@
                 <property name="always-show-image">True</property>
               </object>
               <packing>
-                <property name="x">74</property>
+                <property name="x">38</property>
               </packing>
             </child>
           </object>

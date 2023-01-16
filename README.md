@@ -15,8 +15,8 @@ Les fichiers sont stockés dans le sous-dossier _Fichiers_, situé dans le dossi
 
 ### Créer un compte
 
-Au 1er lancement de l'application, un message d'erreur signalera qu'aucun compte n'a été trouvé. La 1ère étape consiste donc à créer un ou plusieurs comptes.
-Par le menu **Action** -> **Ajouter compte**, renseigner le nom du compte (16 caractères maxi) et son solde initial:
+Au 1er lancement de l'application, si aucun compte n'a été trouvé, il vous est proposé de créer un compte.
+La boite de dialogue _Nouveau compte_ s'ouvre (aussi accessible par le menu **Action** -> **Ajouter compte**), renseigner le nom du compte (16 caractères maxi) et son solde initial:
 
 ![AjouterCompte](images/markdown/ajouter_compte.png)
 
@@ -117,15 +117,22 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 * **1.3.0113.1**
     Première version publiée.
+* **1.3.0116.0**
+  * Ajout contrôle sur saisie simultanée de débit et de crédit et prise en compte de la valeur absolue des valeurs.
+  * Suppression du menu **Fichier**->**Ouvrir** et du bouton associé (le chargement des données comptes est automatique).
+  * Au lancement de l'application, si aucun compte n'existe, on enchaîne sur la création d'un compte.
 
 ## Téléchargements
 
-* Archive _tar.xz_ sans le Runtime _.NET 6_: [v1.3.0113.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0113.1_sans_runtime.tar.xz)
-* Archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.3.0113.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0113.1_avec_runtime.tar.xz)
+* **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_sans_runtime.tar.xz)
+* **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_avec_runtime.tar.xz)
 
-Sur Linux:
+### Installation sur Linux
+
 * décompresser l'archive et se positionner dans le dossier.
 * rendre exécutable le fichier _RafCompta_:
-```chmod +x RafCompta```
+ ```chmod +x RafCompta```
 * lancer l'application:
-```./RafCompta```
+ ```./RafCompta```
+
+Installation du Runtime .NET 6: voir [Installer .NET sur Linux](https://learn.microsoft.com/fr-fr/dotnet/core/install/linux)

@@ -51,7 +51,7 @@ namespace RafCompta
         private string strMsg = string.Empty;
         //
         // controles
-        [UI] private MenuItem mnuFichierOuvrir = null;
+        // [UI] private MenuItem mnuFichierOuvrir = null;
         [UI] private MenuItem mnuFichierEnregistrer = null;
         [UI] private MenuItem mnuFichierConsultArchive = null;
         [UI] private MenuItem mnuFichierQuitter = null;
@@ -73,7 +73,7 @@ namespace RafCompta
         [UI] private Button btnSupprimer = null;
         [UI] private Button btnModifier = null;
         [UI] private Button btnRapprocher = null;
-        [UI] private Button btnOuvrir = null;
+        // [UI] private Button btnOuvrir = null;
         [UI] private Button btnEnregistrer = null;
         [UI] private Button btnConsulterArchives = null;
         [UI] private Label lblEcart = null;
@@ -104,13 +104,23 @@ namespace RafCompta
             this.SetPosition(WindowPosition.Center);
             // timer pour afficher les messages d'erreurs au chargement
             // après l'affichage de la fenêtre principale
-            GLib.Timeout.Add(1000, new GLib.TimeoutHandler(update_status));
+            GLib.Timeout.Add(1000, new GLib.TimeoutHandler(Update_status));
         }
 
-        private bool update_status()
+        private bool Update_status()
         {
             if (strMsg != string.Empty)
+            {
                 Global.ShowMessage("Erreurs au chargement", strMsg, this);
+            }
+            else if (Global.FichierCompteNonTrouve == true)
+            {
+                // on lance la création d'un compte
+                OnMnuActionsAjouterCompte(new Object(), new EventArgs());
+                // si aucun compte créé
+                if (Global.ListeComptesModified == false)
+                    Global.AfficheInfo(txtInfo, "Créez un nouveau compte", new Gdk.Color(0,0,255));
+            }
             // returning false would terminate the timeout.
             return false;
         }
@@ -130,7 +140,7 @@ namespace RafCompta
             DeleteEvent += delegate { OnMnuFichierQuitter(this, new EventArgs()); };
             //
             // events menus
-            mnuFichierOuvrir.Activated += OnMnuFichierOuvrir;
+            // mnuFichierOuvrir.Activated += OnMnuFichierOuvrir;
             mnuFichierEnregistrer.Activated += OnMnuFichierEnregistrer;
             mnuFichierConsultArchive.Activated += OnMnuFichierConsultArchive;
             mnuFichierQuitter.Activated += OnMnuFichierQuitter;
@@ -153,7 +163,7 @@ namespace RafCompta
             btnSupprimer.Clicked += OnBtnSupprimerOperationClicked;
             btnModifier.Clicked += OnBtnModifierOperationClicked;
             btnRapprocher.Clicked += OnBtnRapprocherClick;
-            btnOuvrir.Clicked += OnBtnOuvrirClicked;
+            // btnOuvrir.Clicked += OnBtnOuvrirClicked;
             btnEnregistrer.Clicked += OnBtnEnregistrerClicked;
             btnConsulterArchives.Clicked += OnBtnConsulterArchivesClicked;
             //
@@ -170,14 +180,15 @@ namespace RafCompta
             //
             Global.LireConfigLocal(ref strMsg);
 			if (strMsg != string.Empty)
-                strMsg = "RafCompta, lecture configuration:" + strMsg + "\n\n";
+                strMsg = "Lecture configuration: " + strMsg + "\n\n";
             // chargement liste comptes
             string strMsg2 = string.Empty;
             Int16 nbComptes = datas.ChargeListeComptes(ref strMsg2);
-			if (nbComptes == 0)
+            if (strMsg2 != string.Empty)
             {
-                strMsg2 = "RafCompta, lecture liste comptes: " + strMsg2;
-			    strMsg += strMsg2 + "\nAucun compte n'a été trouvé";
+                if (strMsg != string.Empty)
+                    strMsg += "\n\n";
+                strMsg += "Lecture fichier comptes: " + strMsg2;
             }
 			//
             UpdateCbListeComptes();
@@ -186,7 +197,11 @@ namespace RafCompta
 			//
 			Global.ConfigModified = false;
 			Global.ListeComptesModified = false;
-            Global.AfficheInfo(txtInfo, "Sélectionnez un compte dans la liste déroulante, ou créez un nouveau compte", new Gdk.Color(0,0,255));
+            //
+            if (nbComptes == 0)
+                Global.AfficheInfo(txtInfo, "Créez un nouveau compte", new Gdk.Color(0,0,255));
+            else
+                Global.AfficheInfo(txtInfo, "Sélectionnez un compte dans la liste déroulante, ou créez un nouveau compte", new Gdk.Color(0,0,255));
         }
 
         private void OnBtnConsulterArchivesClicked(object sender, EventArgs e)
@@ -199,10 +214,10 @@ namespace RafCompta
             OnMnuFichierEnregistrer(sender, e);
         }
 
-        private void OnBtnOuvrirClicked(object sender, EventArgs e)
-        {
-            OnMnuFichierOuvrir(sender, e);
-        }
+        // private void OnBtnOuvrirClicked(object sender, EventArgs e)
+        // {
+        //     OnMnuFichierOuvrir(sender, e);
+        // }
 
         // Mise à jour des données.
         // <param name="bVersIHM"></param>
@@ -334,7 +349,7 @@ namespace RafCompta
         private void OnMnuPointAPropos(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox(this);
-            aboutBox.ShowAll();
+            aboutBox.Show();// ShowAll affiche aussi le bouton License qui n'est pas connecté
         }
 
         // Bouton 'Rapprocher'.
@@ -667,18 +682,18 @@ namespace RafCompta
         // Menu 'Fichier->Ouvrir'.
 		// <param name="sender"></param>
 		// <param name="e"></param>
-		void OnMnuFichierOuvrir(object sender, EventArgs e)
-		{
-			if (Global.NomCompteCourant == string.Empty)
-			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
-				return;
-			}
-			txtInfo.Text = string.Empty;
-			ConfirmeSiDataModifiees("Ouvrir compte:");
-			//
-			OuvrirFichier();
-		}
+		// void OnMnuFichierOuvrir(object sender, EventArgs e)
+		// {
+		// 	if (Global.NomCompteCourant == string.Empty)
+		// 	{
+		// 		Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+		// 		return;
+		// 	}
+		// 	txtInfo.Text = string.Empty;
+		// 	ConfirmeSiDataModifiees("Ouvrir compte:");
+		// 	//
+		// 	OuvrirFichier();
+		// }
 
         /// <summary>
 		/// Ouverture du fichier de compte courant.

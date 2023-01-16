@@ -128,13 +128,13 @@ namespace RafCompta
         private void OnTxtCreditFocusOut(object sender, EventArgs a)
         {
             txtCredit.FocusOutEvent -= OnTxtCreditFocusOut;
-			txtCredit.Text = Global.GetValueOrZero(txtInfo, sender, true).ToString();
+			txtCredit.Text = Math.Abs(Global.GetValueOrZero(txtInfo, sender, true)).ToString();
 			txtCredit.FocusOutEvent += OnTxtCreditFocusOut;
         }
         private void OnTxtDebitFocusOut(object sender, EventArgs a)
         {
             txtDebit.FocusOutEvent -= OnTxtDebitFocusOut;
-			txtDebit.Text = Global.GetValueOrZero(txtInfo, sender, true).ToString();
+			txtDebit.Text = Math.Abs(Global.GetValueOrZero(txtInfo, sender, true)).ToString();
 			txtDebit.FocusOutEvent += OnTxtDebitFocusOut;
         }
 
@@ -155,6 +155,13 @@ namespace RafCompta
 
         void OnBtnOkClicked(object sender, EventArgs e)
 		{
+            // crédit ou débit mais pas les deux
+            if (txtDebit.Text != "0" && txtCredit.Text != "0")
+            {
+                Global.AfficheInfo(txtInfo, "Impossible de saisir simultanément du crédit et du débit", new Gdk.Color(255,0,0));
+                return;
+            }
+            //
 			rResponse = ResponseType.Ok;
 			this.Dispose();
 		}

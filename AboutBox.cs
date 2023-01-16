@@ -50,13 +50,12 @@ namespace RafCompta
             this.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         
             Widget[] buttons = btnBox.Children;
-            // attention, pas de bouton Fermer sur Xubuntu
+            // attention, pas de bouton Fermer sur Ubuntu
             if (buttons.Length > 2)
             {
                 Button btnFermer = (Button)buttons[2];
                 btnFermer.Clicked += OnBtnFermerClicked;
             }
-            //Global.ShowMessage("", btnFermer., this);
         }
 
         private void OnBtnFermerClicked(object sender, EventArgs e)
