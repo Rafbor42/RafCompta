@@ -31,6 +31,7 @@ Plusieurs fichiers vont se créer:
 ### Saisir des opérations
 
 Saisir ensuite des opérations par le menu **Actions** -> **Ajouter opération** ou par le bouton équivalent dans la fenêtre principale.
+Cocher la case _Opération récurrente_ si on veut pouvoir l'ajouter les mois suivants sans la saisir à nouveau.
 
 ![AjouterOperation](images/markdown/ajouter_operation.png)
 
@@ -41,7 +42,7 @@ Saisir ensuite des opérations par le menu **Actions** -> **Ajouter opération**
 Lorsque les opérations sont visibles sur le compte en banque, on peut effectuer le rapprochement bancaire.
 
 * Saisir le nouveau solde banque dans la zone de texte _Banque_.
-* Cocher la case en début de chaque ligne à rapprocher. L'écart avec la banque apparait dans la zone de texte _Ecart_.
+* Cocher la case en début de chaque ligne à rapprocher. Le total des débits et crédits ainsi que l'écart avec la banque apparaissent.
 Si l'écart est de 0, un rapprochement devient possible, et un bouton **Rapprocher** apparait.
   
     ```text
@@ -53,6 +54,19 @@ Si _Archiver les lignes rapprochées_ est coché dans l'onglet _Paramètres_, le
 * Enregistrer les modifications par le menu **Fichier** -> **Enregistrer** ou par le bouton équivalent sous la barre de menus.
 Les fichiers déjà créés sont mis à jour.
 Si parmi les opérations archivées, une au moins n'a pas été effectuée pendant l'année courante, un nouveau fichier d'archives est créé pour l'année concernée.
+
+### Opérations récurrentes
+
+Par le menu **Actions** -> **Opérations récurrentes** ou par le bouton équivalent dans la fenêtre principale, on accède à la fenêtre de gestion:
+
+![OperationsRecurrentes](images/markdown/operation_recurrente.png)
+
+Cocher les lignes d'opérations à ajouter au compte courant, le bouton _Ajouter au compte_ apparait. La date d'ajout sera fixée au jour indiqué, pour le mois courant.
+On peut supprimer ou modifier une opération en sélectionnant la ligne.
+
+Chaque opération est identifiée par une clé unique, si l'opération existe déjà dans le compte courant, elle sera ignorée:
+
+![OperecurrenteIgnoree](images/markdown/operecurrente_ignoree.png)
 
 ## Paramètres du compte courant
 
@@ -68,12 +82,14 @@ Le fichier de compte se charge automatiquement lorsqu'on sélectionne un compte 
 * _Archiver les lignes rapprochées_: si coché, les lignes sont archivées lors du rapprochement bancaire.
 
 Certains de ces paramètres sont prédéfinis dans le fichier de configuration de l'application _app.config_. Ils sont mis à jour à la fermeture de l'application. Le nom par défaut du fichier de données des comptes _ListeComptes.xml_ n'est pas modifiable dans l'application, mais directement dans le fichier de configuration.
+Idem pour la clé des opérations récurrentes _KeyOpeRecur_ qui est géré par l'application et **ne doit pas être modifié**.
 
 ```text
 <appSettings>
 <add key="FichierDonneesComptes" value="ListeComptes.xml" />
 <add key="SauveFichierAuto" value="true" />
 <add key="ArchiveLigneRappro" value="true" />
+<add key="KeyOpeRecur" value="0" />
 </appSettings>
 ```
 
@@ -121,8 +137,20 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
   * Ajout contrôle sur saisie simultanée de débit et de crédit et prise en compte de la valeur absolue des valeurs.
   * Suppression du menu **Fichier**->**Ouvrir** et du bouton associé (le chargement des données comptes est automatique).
   * Au lancement de l'application, si aucun compte n'existe, on enchaîne sur la création d'un compte.
+* **1.4.0125.0**
+  * Bugfix sur sauvegarde de la configuration.
+  * Ajout affichage des totaux débits et crédits des lignes sélectionnées.
+  * Ajout gestion des opérations récurrentes.
+  * Corrections mineures.
 
 ## Téléchargements
+
+### Dernière version
+
+* **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_sans_runtime.tar.xz)
+* **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_avec_runtime.tar.xz)
+
+### Anciennes versions
 
 * **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_sans_runtime.tar.xz)
 * **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_avec_runtime.tar.xz)

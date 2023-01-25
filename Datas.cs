@@ -50,12 +50,14 @@ namespace RafCompta
 	{
 		public Window pParentWindow=null;
 		public DataTable dtTableOperations, dtTableArchOperations, dtTableOperationsArchivees;
-		public ListStore lstoreOperations;
+		public DataTable dtTableOperationsRecur;
+		public ListStore lstoreOperations, lstoreOperationsRecur;
 		public ListStore lstoreOperationsArchivees, lstoreListeArchives;
 		private OperationBox OperBox;
 		private DateTime dtmDate;
 		private string strOperation, strModePaiement;
 		private double dblCredit, dblDebit;
+		private bool bRecurrente;
 		
 		/// <summary>
 		/// Constructeur.
@@ -71,13 +73,25 @@ namespace RafCompta
 			dtTableOperations.Columns.Add("dtDate", typeof(DateTime));
 			dtTableOperations.Columns.Add("dblCredit", typeof(Double));
 			dtTableOperations.Columns.Add("dblDebit", typeof(Double));
+			dtTableOperations.Columns.Add("bRecurrente", typeof(bool));
+			dtTableOperations.Columns.Add("nKeyRecur", typeof(Int16));
 			//
 			dtTableArchOperations = dtTableOperations.Clone();
 			dtTableOperationsArchivees = dtTableOperations.Clone();
 			//
+			dtTableOperationsRecur = new DataTable("OperationsRecur");
+			dtTableOperationsRecur.Columns.Add("strNomCompte", typeof(String));
+			dtTableOperationsRecur.Columns.Add("nKey", typeof(Int16));
+			dtTableOperationsRecur.Columns.Add("strOperation", typeof(String));
+			dtTableOperationsRecur.Columns.Add("strModePaiement", typeof(String));
+			dtTableOperationsRecur.Columns.Add("dtDate", typeof(DateTime));
+			dtTableOperationsRecur.Columns.Add("dblCredit", typeof(Double));
+			dtTableOperationsRecur.Columns.Add("dblDebit", typeof(Double));
+			//
             lstoreOperations = new ListStore(typeof(bool), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(Int16));
             lstoreOperationsArchivees = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(Int16));
 			lstoreListeArchives = new ListStore(typeof(string));
+			lstoreOperationsRecur = new ListStore(typeof(bool), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(Int16));
 			//
 			Init();
 		}
@@ -88,11 +102,24 @@ namespace RafCompta
 			dtTableArchOperations.Clear();
 			dtTableOperationsArchivees.Clear();
 			lstoreOperations.Clear();
+			lstoreOperationsRecur.Clear();
 			GetListeArchivesCompteCourant();
+			GetListeOpeRecurCompteCourant();
 		}
-		
-		// Récupère dans un ListStore la liste des fichiers d'archives du compte courant.
-		public void GetListeArchivesCompteCourant()
+
+        private void GetListeOpeRecurCompteCourant()
+        {
+            foreach (DataRow row in dtTableOperationsRecur.Select("strNomCompte='" + Global.NomCompteCourant + "'", "dtDate ASC"))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				lstoreOperationsRecur.AppendValues(false, row["strOperation"].ToString(), row["strModePaiement"].ToString(), Convert.ToDateTime(row["dtDate"]).Day, row["dblCredit"].ToString(), row["dblDebit"].ToString(), Convert.ToInt16(row["nKey"]));
+			}
+        }
+
+        // Récupère dans un ListStore la liste des fichiers d'archives du compte courant.
+        public void GetListeArchivesCompteCourant()
 		{
 			string strFileName;
 			// on passe par un DataTable temporaire pour effectuer le tri
@@ -142,9 +169,12 @@ namespace RafCompta
 		/// <returns></returns>
 		public short ChargeListeComptes(ref string strMsg)
 		{
-			short nNbParam = 0;
+			short nNbParam = 0, nKey;
 			string strNomCompte;
 			double dblSoldeInitial;
+			DateTime dtDate;
+			string strOperation, strModePaiement;
+			double dblCredit, dblDebit;
 			
 			try
 			{
@@ -158,6 +188,22 @@ namespace RafCompta
 						//
 						Global.AjouteCompte(strNomCompte, dblSoldeInitial);
 						nNbParam++;
+						//
+						foreach (XElement elt3 in elt.Elements("OpéRécurrentes"))
+						{
+							foreach (XElement elt4 in elt3.Elements())
+							{
+								nKey = Convert.ToInt16((string)elt4.Attribute("Key"));
+								dtDate = Convert.ToDateTime((string)elt4.Element("Date"));
+								strOperation = (string)elt4.Element("Libellé");
+								strModePaiement = (string)elt4.Element("ModePaiement");
+								dblCredit = Convert.ToDouble((string)elt4.Element("Crédit"));
+								dblDebit = Convert.ToDouble((string)elt4.Element("Débit"));
+								//
+								AjouteOperationRecur(strNomCompte, nKey, dtDate, strOperation, strModePaiement, dblCredit, dblDebit);
+							}
+						}
+						dtTableOperationsRecur.AcceptChanges();
 					}
 				}
 			}
@@ -172,13 +218,37 @@ namespace RafCompta
 			//
 			return nNbParam;
 		}
-		
-		/// <summary>
-		/// Enregistrement de la liste des comptes.
-		/// </summary>
-		/// <param name="strMsg"></param>
-		/// <returns></returns>
-		public short EnregistrerDonneesComptes(ref string strMsg)
+
+        private void AjouteOperationRecur
+		(
+			string strNomCompte,
+			Int16 nKey,
+			DateTime dtDate,
+			string strOperation,
+			string strModePaiement,
+			double dblCredit,
+			double dblDebit
+		)
+        {
+			DataRow newrow = dtTableOperationsRecur.NewRow();
+			newrow["strNomCompte"] = strNomCompte;
+			newrow["nKey"] = nKey;
+			newrow["strOperation"] = strOperation;
+			newrow["strModePaiement"] = strModePaiement;
+			newrow["dblCredit"] = dblCredit;
+			newrow["dblDebit"] = dblDebit;
+			newrow["dtDate"] = dtDate;
+			dtTableOperationsRecur.Rows.Add(newrow);
+			//
+			lstoreOperationsRecur.AppendValues(false, strOperation, strModePaiement, dtDate.Day, dblCredit.ToString(), dblDebit.ToString(), nKey);
+        }
+
+        /// <summary>
+        /// Enregistrement de la liste des comptes.
+        /// </summary>
+        /// <param name="strMsg"></param>
+        /// <returns></returns>
+        public short EnregistrerDonneesComptes(ref string strMsg)
 		{
 			XmlTextWriter XMLWriter = null;
 			short nNbParam = 0;
@@ -199,6 +269,25 @@ namespace RafCompta
 					XMLWriter.WriteStartElement("Compte");
 					XMLWriter.WriteElementString("NomCompte", compte.strNomCompte);
 					XMLWriter.WriteElementString("SoldeInitial", compte.dblSoldeInitial.ToString());
+					// opérations récurrentes
+					XMLWriter.WriteStartElement("OpéRécurrentes");
+					foreach (DataRow row in dtTableOperationsRecur.Select("strNomCompte='" + compte.strNomCompte + "'"))
+					{
+						if (row.RowState == DataRowState.Deleted)
+							continue;
+						//
+						XMLWriter.WriteStartElement("Opération");
+						XMLWriter.WriteAttributeString("Key", row["nKey"].ToString());
+						XMLWriter.WriteElementString("ModePaiement", row["strModePaiement"].ToString());
+						XMLWriter.WriteElementString("Date", Convert.ToDateTime(row["dtDate"]).ToShortDateString());
+						XMLWriter.WriteElementString("Libellé", row["strOperation"].ToString());
+						XMLWriter.WriteElementString("Crédit", row["dblCredit"].ToString());
+						XMLWriter.WriteElementString("Débit", row["dblDebit"].ToString());
+						XMLWriter.WriteEndElement();
+					}
+					XMLWriter.WriteEndElement();
+					dtTableOperationsRecur.AcceptChanges();
+					//
 					XMLWriter.WriteEndElement();
 					//
 					nNbParam++;
@@ -230,7 +319,7 @@ namespace RafCompta
 			DateTime dtDate;
 			string strOperation, strModePaiement;
 			double dblCredit, dblDebit;
-			Int16 nKey;
+			Int16 nKey, nKeyRecur;
 			try
 			{
 				XElement xmlElt = XElement.Load(Path.Combine(Global.DossierFichiers, Global.CompteCourant.strNomFichier));
@@ -238,13 +327,19 @@ namespace RafCompta
 				{
 					foreach (XElement elt in elt2.Elements())
 					{
+						bRecurrente = false;
+						nKeyRecur = 0;
+						nKeyRecur = Convert.ToInt16((string)elt.Attribute("KeyRecur"));
+						if (nKeyRecur > 0)
+							bRecurrente = true;
+						//
 						dtDate = Convert.ToDateTime((string)elt.Element("Date"));
 						strOperation = (string)elt.Element("Libellé");
 						strModePaiement = (string)elt.Element("ModePaiement");
 						dblCredit = Convert.ToDouble((string)elt.Element("Crédit"));
 						dblDebit = Convert.ToDouble((string)elt.Element("Débit"));
 						//
-						nKey = AjouteOperation(dtDate, strOperation, strModePaiement, dblCredit, dblDebit);
+						nKey = AjouteOperation(dtDate, strOperation, strModePaiement, dblCredit, dblDebit, bRecurrente, nKeyRecur, false);
 						nNbParam++;
 					}
 				}
@@ -285,6 +380,7 @@ namespace RafCompta
 						continue;
 					//
 					XMLWriter.WriteStartElement("Opération");
+					XMLWriter.WriteAttributeString("KeyRecur", row["nKeyRecur"].ToString());
 					XMLWriter.WriteElementString("ModePaiement", row["strModePaiement"].ToString());
 					XMLWriter.WriteElementString("Date", Convert.ToDateTime(row["dtDate"]).ToShortDateString());
 					XMLWriter.WriteElementString("Libellé", row["strOperation"].ToString());
@@ -487,17 +583,17 @@ namespace RafCompta
 		/// <summary>
 		/// Ajoute une opération dans la table dtTableOperations et dans lstoreOperations.
 		/// </summary>
-		/// <param name="dtmDate"></param>
-		/// <param name="strOperation"></param>
-		/// <param name="dblCredit"></param>
-		/// <param name="dblDebit"></param>
 		public Int16 AjouteOperation
 		(
 			DateTime dtmDate,
 			string strOperation,
 			string strModePaiement,
 			double dblCredit,
-			double dblDebit)
+			double dblDebit,
+			bool bRecurrente,
+			Int16 nKeyRecur,
+			bool bCreerOpeRecur
+		)
 		{
 			// détermination de la clé
 			Int16 nKey = 0;
@@ -517,10 +613,16 @@ namespace RafCompta
 			newrow["dblCredit"] = dblCredit;
 			newrow["dblDebit"] = dblDebit;
 			newrow["dtDate"] = dtmDate;
+			newrow["bRecurrente"] = bRecurrente;
+			newrow["nKeyRecur"] = nKeyRecur;
 			dtTableOperations.Rows.Add(newrow);
 			//
 			lstoreOperations.AppendValues(false, strOperation, strModePaiement, dtmDate.ToShortDateString(), dblCredit.ToString(), dblDebit.ToString(), nKey);
 			//
+			if (bCreerOpeRecur == true)
+			{
+				AjouteOperationRecur(Global.CompteCourant.strNomCompte, nKeyRecur, dtmDate, strOperation, strModePaiement, dblCredit, dblDebit);
+			}
 			return nKey;
 		}
 		
@@ -566,10 +668,6 @@ namespace RafCompta
 		/// <summary>
 		/// Ajoute une opération par l'intermédiaire de la boite dialogue.
 		/// </summary>
-		/// <param name="dtmDate"></param>
-		/// <param name="strOperation"></param>
-		/// <param name="dblCredit"></param>
-		/// <param name="dblDebit"></param>
 		public void AjouteBoxOperation
 		()
 		{
@@ -578,11 +676,19 @@ namespace RafCompta
 			strModePaiement = "---";
 			dblCredit = 0;
 			dblDebit = 0;
-			OperBox = new OperationBox(pParentWindow, "Nouvelle opération");
-			OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate); };
-			if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate) == ResponseType.Ok)
+			bRecurrente = false;
+			Int16 nKeyRecur = 0;
+			bool bCreerOpeRecur = false;
+			OperBox = new OperationBox(pParentWindow, "Nouvelle opération", true);
+			OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
+			if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
 			{
-				AjouteOperation(dtmDate, strOperation, strModePaiement, dblCredit, dblDebit);
+				if (bRecurrente == true)
+				{
+					nKeyRecur = Global.GetNewKeyOpeReccurente();
+					bCreerOpeRecur = true;
+				}
+				AjouteOperation(dtmDate, strOperation, strModePaiement, dblCredit, dblDebit, bRecurrente, nKeyRecur, bCreerOpeRecur);
 			}
 		}
 		
@@ -603,16 +709,18 @@ namespace RafCompta
 				dblCredit = Convert.ToDouble(row["dblCredit"]);
 				dblDebit = Convert.ToDouble(row["dblDebit"]);
 				dtmDate = Convert.ToDateTime(row["dtDate"]);
+				bRecurrente = Convert.ToBoolean(row["bRecurrente"]);
 				//
-				OperBox = new OperationBox(pParentWindow, "Modifier opération");
-				OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate); };
-				if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate) == ResponseType.Ok)
+				OperBox = new OperationBox(pParentWindow, "Modifier opération", false);
+				OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
+				if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
 				{
 					row["strOperation"] = strOperation;
 					row["strModePaiement"] = strModePaiement;
 					row["dblCredit"] = dblCredit;
 					row["dblDebit"] = dblDebit;
 					row["dtDate"] = dtmDate;
+					row["bRecurrente"] = bRecurrente;
 					//
 					lstoreOperations.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Operation), strOperation);
 					lstoreOperations.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.ModePaiement), strModePaiement);
@@ -624,7 +732,7 @@ namespace RafCompta
 		}
 
 		// Destruction de la boite OperationBox.
-		private void OnOperBoxDestroyed(ref string strOperation, ref string strModePaiement, ref double dblCredit, ref double dblDebit, ref DateTime dtmDate)
+		private void OnOperBoxDestroyed(ref string strOperation, ref string strModePaiement, ref double dblCredit, ref double dblDebit, ref DateTime dtmDate, ref bool bRecurrente)
         {
             if (OperBox.rResponse == ResponseType.Ok)
             {
@@ -633,6 +741,7 @@ namespace RafCompta
                 dtmDate = Convert.ToDateTime(OperBox.txtDate.Text);
                 dblCredit = Convert.ToDouble(OperBox.txtCredit.Text);
                 dblDebit = Convert.ToDouble(OperBox.txtDebit.Text);
+				bRecurrente = OperBox.Recurrente;
             }
         }
 
@@ -706,5 +815,102 @@ namespace RafCompta
                 );
             }
         }
-	}
+
+		public void AjouteOpeRecurSurCompteCourant
+		(
+			TreeIter iter,
+			Int16 nKey
+		)
+		{
+			foreach(DataRow row in dtTableOperationsRecur.Select("nKey=" + nKey))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+
+				DateTime dtDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Convert.ToDateTime(row["dtDate"]).Day);
+				AjouteOperation(dtDate,
+								row["strOperation"].ToString(),
+								row["strModePaiement"].ToString(),
+								Convert.ToDouble(row["dblCredit"]),
+								Convert.ToDouble(row["dblDebit"]),
+								true,
+								nKey,
+								false
+								);
+				// on désélectionne l'opération 
+				lstoreOperationsRecur.SetValue(iter, 0, false);
+			}
+		}
+
+		public void SupprimeOpeRecurrente
+		(
+			TreeIter iter
+		)
+		{
+			Int16 nKey = Convert.ToInt16(lstoreOperationsRecur.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
+			foreach(DataRow row in dtTableOperationsRecur.Select("nKey=" + nKey))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				row.Delete();
+			}
+			lstoreOperationsRecur.Remove(ref iter);
+		}
+
+		public void ModifieOpeRecurrente
+		(
+			TreeIter iter
+		)
+		{
+			Int16 nKey = Convert.ToInt16(lstoreOperationsRecur.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
+			foreach(DataRow row in dtTableOperationsRecur.Select("nKey=" + nKey))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				strOperation = row["strOperation"].ToString();
+				strModePaiement = row["strModePaiement"].ToString();
+				dblCredit = Convert.ToDouble(row["dblCredit"]);
+				dblDebit = Convert.ToDouble(row["dblDebit"]);
+				dtmDate = Convert.ToDateTime(row["dtDate"]);
+				bRecurrente = true;
+				//
+				OperBox = new OperationBox(pParentWindow, "Modifier opération", false);
+				OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
+				if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
+				{
+					row["strOperation"] = strOperation;
+					row["strModePaiement"] = strModePaiement;
+					row["dblCredit"] = dblCredit;
+					row["dblDebit"] = dblDebit;
+					row["dtDate"] = dtmDate;
+					//
+					lstoreOperationsRecur.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Operation), strOperation);
+					lstoreOperationsRecur.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.ModePaiement), strModePaiement);
+					lstoreOperationsRecur.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Credit), dblCredit.ToString());
+					lstoreOperationsRecur.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Debit), dblDebit.ToString());
+					lstoreOperationsRecur.SetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Date), dtmDate.Day);
+				}
+				// on désélectionne l'opération 
+				lstoreOperationsRecur.SetValue(iter, 0, false);
+			}
+		}
+
+		// Retourne vrai si l'opération existe déjà dans la table dtTableOperations.
+		public bool IsOperationExistante
+		(
+			Int16 nKey
+		)
+		{
+			foreach(DataRow row in dtTableOperations.Select("nKeyRecur=" + nKey))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				return true;
+			}
+			return false;
+		}
+    }
 }

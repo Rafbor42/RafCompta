@@ -12,6 +12,11 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-ok</property>
   </object>
+  <object class="GtkImage" id="image11">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-paste</property>
+  </object>
   <object class="GtkImage" id="image12">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -21,6 +26,11 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-find</property>
+  </object>
+  <object class="GtkImage" id="image14">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-paste</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
@@ -89,7 +99,7 @@
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Sauvegarde tous les fichiers du compte courant</property>
+                        <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte courant</property>
                         <property name="use-underline">True</property>
                         <property name="use-stock">True</property>
                         <property name="always-show-image">True</property>
@@ -197,6 +207,23 @@
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionOpeRecurrentes">
+                        <property name="label" translatable="yes">Opérations récurrentes</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Gestion des opérations récurrentes du compte courant</property>
+                        <property name="image">image11</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -278,7 +305,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Sauvegarde tous les fichiers du compte courant</property>
+                <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte courant</property>
                 <property name="image">image12</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -296,6 +323,21 @@
               </object>
               <packing>
                 <property name="x">38</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnOpeRecurrentes">
+                <property name="width-request">34</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Gestion des opérations récurrentes du compte courant</property>
+                <property name="image">image14</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">76</property>
               </packing>
             </child>
           </object>
@@ -482,7 +524,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="chkSauverFichierAuto">
-                    <property name="label" translatable="yes">Sauvegarder le fichier de comptes à la fermeture</property>
+                    <property name="label" translatable="yes">Enregistrer le fichier de comptes à la fermeture</property>
                     <property name="width-request">352</property>
                     <property name="height-request">34</property>
                     <property name="visible">True</property>
@@ -659,7 +701,7 @@
                 <property name="xalign">0.949999988079071</property>
               </object>
               <packing>
-                <property name="x">5</property>
+                <property name="x">6</property>
               </packing>
             </child>
             <child>
@@ -690,7 +732,7 @@
                 <property name="xalign">0.949999988079071</property>
               </object>
               <packing>
-                <property name="x">5</property>
+                <property name="x">6</property>
                 <property name="y">36</property>
               </packing>
             </child>
@@ -704,7 +746,7 @@
                 <property name="xalign">0.949999988079071</property>
               </object>
               <packing>
-                <property name="x">282</property>
+                <property name="x">193</property>
               </packing>
             </child>
             <child>
@@ -721,13 +763,13 @@
                 <property name="max-width-chars">12</property>
               </object>
               <packing>
-                <property name="x">345</property>
+                <property name="x">254</property>
               </packing>
             </child>
             <child>
               <object class="GtkButton" id="btnRapprocher">
                 <property name="label" translatable="yes">Rapprocher</property>
-                <property name="width-request">170</property>
+                <property name="width-request">117</property>
                 <property name="height-request">34</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
@@ -737,7 +779,67 @@
                 <property name="always-show-image">True</property>
               </object>
               <packing>
-                <property name="x">290</property>
+                <property name="x">252</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblCredits">
+                <property name="width-request">72</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Crédits (€)</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">374</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lblDebits">
+                <property name="width-request">67</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Débits (€)</property>
+                <property name="xalign">0.949999988079071</property>
+              </object>
+              <packing>
+                <property name="x">379</property>
+                <property name="y">36</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtCredits">
+                <property name="width-request">100</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Somme des crédits des lignes sélectionnées</property>
+                <property name="editable">False</property>
+                <property name="max-length">12</property>
+                <property name="width-chars">12</property>
+                <property name="max-width-chars">12</property>
+              </object>
+              <packing>
+                <property name="x">446</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtDebits">
+                <property name="width-request">100</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Somme des débits des lignes sélectionnées</property>
+                <property name="editable">False</property>
+                <property name="max-length">12</property>
+                <property name="width-chars">12</property>
+                <property name="max-width-chars">12</property>
+              </object>
+              <packing>
+                <property name="x">446</property>
                 <property name="y">36</property>
               </packing>
             </child>

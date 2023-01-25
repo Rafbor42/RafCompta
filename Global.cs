@@ -70,6 +70,7 @@ namespace RafCompta
 		public static sCompte CompteCourant;
         private static string strAppStartupPath;
         private static string strDossierFichiers;
+		private static Int16 nKeyOpeRecur;
 		//
 		public static string FichierDonneesComptes { get => strFichierDonneesComptes; set => strFichierDonneesComptes = value; }
 		public static bool ConfigModified {	get => bConfigModified; set => bConfigModified = value; }
@@ -82,6 +83,7 @@ namespace RafCompta
         public static bool SauveFichierAuto { get => bSauveFichierAuto; set => bSauveFichierAuto = value; }
         public static bool ArchiveLigneRappro { get => bArchiveLigneRappro; set => bArchiveLigneRappro = value; }
         public static bool FichierCompteNonTrouve { get => bFichierCompteNonTrouve; set => bFichierCompteNonTrouve = value; }
+        public static short KeyOpeRecur { get => nKeyOpeRecur; set => nKeyOpeRecur = value; }
 
         public enum eTrvOperationsCols
 		{
@@ -114,6 +116,7 @@ namespace RafCompta
 			ChargeFichierAuto = true;
 			SauveFichierAuto = false;
 			ArchiveLigneRappro = true;
+			KeyOpeRecur = 0;
 			FichierCompteNonTrouve = false;
 			//
 			ConfigModified = false;
@@ -191,6 +194,7 @@ namespace RafCompta
         		//ChargeFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["ChargeFichierAuto"]); toujours vrai
 	       		SauveFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["SauveFichierAuto"]);
     	   		ArchiveLigneRappro = Convert.ToBoolean(ConfigurationManager.AppSettings["ArchiveLigneRappro"]);
+				KeyOpeRecur = Convert.ToInt16(ConfigurationManager.AppSettings["KeyOpeRecur"]);
         	}
         	catch (Exception ex)
 			{
@@ -237,14 +241,17 @@ namespace RafCompta
 				            if (node.Attributes[0].Value.Equals("FichierDonneesComptes"))
 				            	node.Attributes[1].Value = FichierDonneesComptes;
 				            //
-				            if (node.Attributes[0].Value.Equals("ChargeFichierAuto"))
-				            	node.Attributes[1].Value = ChargeFichierAuto.ToString();
+				            // if (node.Attributes[0].Value.Equals("ChargeFichierAuto")) // toujours vrai
+				            // 	node.Attributes[1].Value = ChargeFichierAuto.ToString();
 				            //
 				            if (node.Attributes[0].Value.Equals("SauveFichierAuto"))
 				            	node.Attributes[1].Value = SauveFichierAuto.ToString();
 				            //
 				            if (node.Attributes[0].Value.Equals("ArchiveLigneRappro"))
 				            	node.Attributes[1].Value = ArchiveLigneRappro.ToString();
+							//
+				            if (node.Attributes[0].Value.Equals("KeyOpeRecur"))
+				            	node.Attributes[1].Value = KeyOpeRecur.ToString();
 				    	}
 				    }
 				}
@@ -302,9 +309,9 @@ namespace RafCompta
 		}
 
 		// Affiche un message dans une boite de dialogue.
-        public static void ShowMessage(string strTitle, string strMsg, Window pParent)
+        public static void ShowMessage(string strTitle, string strMsg, Window pParent, MessageType msgType = MessageType.Error)
         {
-            MessageDialog md = new MessageDialog(pParent, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Close, strTitle);
+            MessageDialog md = new MessageDialog(pParent, DialogFlags.DestroyWithParent, msgType, ButtonsType.Close, strTitle);
             md.SecondaryText = strMsg;
             md.Run();
             md.Dispose();
@@ -374,6 +381,26 @@ namespace RafCompta
 			txtInfo.ModifyFg(StateType.Normal, color);
 			txtInfo.Text = strMsg;
 			txtInfo.Show();
+		}
+
+		public static Int16 GetNewKeyOpeReccurente()
+		{
+			KeyOpeRecur++;
+			ConfigModified = true;
+			return KeyOpeRecur;
+		}
+
+		// Demande confirmation à l'utilisateur.
+        public static bool Confirmation(string strCaption, string strMsg, Window pParentWindow)
+		{
+			MessageDialog md = new MessageDialog(pParentWindow, DialogFlags.DestroyWithParent, MessageType.Question, ButtonsType.YesNo, strCaption);
+            md.SecondaryText = strMsg;
+            ResponseType result = (ResponseType)md.Run();
+            md.Dispose();
+            if (result == ResponseType.Yes)
+				return true;
+			else
+				return false;
 		}
 	}
 }

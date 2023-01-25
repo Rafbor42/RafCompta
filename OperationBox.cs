@@ -69,6 +69,9 @@ namespace RafCompta
     public class OperationBox : Dialog
     {
         public ResponseType rResponse;
+        private bool bRecurrente;
+        private bool bOpeRecurMod;
+        private Int16 nKeyRecur;
         private CalendarBox datePicker;
         private Window pParentWindow=null;
 
@@ -81,14 +84,20 @@ namespace RafCompta
         [UI] private Entry txtInfo = null;
         [UI] private Button btnOk = null;
         [UI] private Button btnCancel = null;
+        [UI] private CheckButton chkRecurrente = null;
 
-        public OperationBox(Window ParentWindow, string strTitre) : this(new Builder("OperationBox.glade"))
+        public bool Recurrente { get => bRecurrente; set => bRecurrente = value; }
+        public Int16 KeyRecur { get => nKeyRecur; set => nKeyRecur = value; }
+        public bool OpeRecurMod { get => bOpeRecurMod; set => bOpeRecurMod = value; }
+
+        public OperationBox(Window ParentWindow, string strTitre, bool bOpeRecurMod) : this(new Builder("OperationBox.glade"))
         {
             pParentWindow = ParentWindow;
             this.TransientFor = pParentWindow;
             this.SetPosition(WindowPosition.CenterOnParent);
             this.Modal = true;
             this.Title = strTitre;
+            OpeRecurMod = bOpeRecurMod;
         }
 
         private OperationBox(Builder builder) : base(builder.GetRawOwnedObject("OperationBox"))
@@ -104,6 +113,7 @@ namespace RafCompta
             txtDebit.Changed += OnTxtDebitChanged;
             txtDebit.FocusOutEvent += OnTxtDebitFocusOut;
             //
+            chkRecurrente.Active = false;
             txtInfo.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
         }
 
@@ -162,6 +172,7 @@ namespace RafCompta
                 return;
             }
             //
+            Recurrente = chkRecurrente.Active;
 			rResponse = ResponseType.Ok;
 			this.Dispose();
 		}
@@ -171,12 +182,14 @@ namespace RafCompta
 			this.Dispose();
 		}
         
-        public ResponseType ShowD(string strOperation, string strModePaiement, double dblCredit, double dblDebit, DateTime dtmDate)
+        public ResponseType ShowD(string strOperation, string strModePaiement, double dblCredit, double dblDebit, DateTime dtmDate, bool bRecurrente)
         {
             txtOperation.Text = strOperation;
             txtDate.Text = dtmDate.ToShortDateString();
             txtCredit.Text = dblCredit.ToString();
             txtDebit.Text = dblDebit.ToString();
+            chkRecurrente.Active = bRecurrente;
+            chkRecurrente.Sensitive = OpeRecurMod;
             for (int i = 0; i < Global.arListItem.Count; i++)
             {
                 if (Global.arListItem[i].Equals(strModePaiement))

@@ -60,6 +60,7 @@ namespace RafCompta
         [UI] private MenuItem mnuActionAjouterOperation = null;
         [UI] private MenuItem mnuActionSupprimerOperation = null;
         [UI] private MenuItem mnuActionModifierOperation = null;
+        [UI] private MenuItem mnuActionOpeRecurrentes = null;
         [UI] private MenuItem mnuPointAPropos = null;
         [UI] private MenuItem mnuPointAide = null;
         //
@@ -69,6 +70,8 @@ namespace RafCompta
         [UI] private Entry txtSoldeBanque = null;
         [UI] private Entry txtEcart = null;
         [UI] private Entry txtInfo = null;
+        [UI] private Entry txtCredits = null;
+        [UI] private Entry txtDebits = null;
         [UI] private Button btnAjouter = null;
         [UI] private Button btnSupprimer = null;
         [UI] private Button btnModifier = null;
@@ -76,7 +79,10 @@ namespace RafCompta
         // [UI] private Button btnOuvrir = null;
         [UI] private Button btnEnregistrer = null;
         [UI] private Button btnConsulterArchives = null;
+        [UI] private Button btnOpeRecurrentes = null;
         [UI] private Label lblEcart = null;
+        [UI] private Label lblCredits = null;
+        [UI] private Label lblDebits = null;
         //
         [UI] private Entry txtSoldeInitial = null;
         [UI] private Entry txtNomCompte = null;
@@ -85,19 +91,6 @@ namespace RafCompta
         [UI] private CheckButton chkChargerFichierAuto = null;
         [UI] private CheckButton chkSauverFichierAuto = null;
         [UI] private CheckButton chkArchiverLigneRappro = null;
-
-        // Demande confirmation à l'utilisateur.
-        private bool Confirmation(string strCaption, string strMsg)
-		{
-			MessageDialog md = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Question, ButtonsType.YesNo, strCaption);
-            md.SecondaryText = strMsg;
-            ResponseType result = (ResponseType)md.Run();
-            md.Dispose();
-            if (result == ResponseType.Yes)
-				return true;
-			else
-				return false;
-		}
 
         public MainWindow() : this(new Builder("MainWindow.glade"))
         {
@@ -149,6 +142,7 @@ namespace RafCompta
             mnuActionAjouterOperation.Activated += OnMnuActionsAjouterOperation;
             mnuActionModifierOperation.Activated += OnMnuActionsModifierOperation;
             mnuActionSupprimerOperation.Activated += OnMnuActionsSupprimerOperation;
+            mnuActionOpeRecurrentes.Activated += OnMnuActionsOpRecurrentes;
             mnuPointAPropos.Activated += OnMnuPointAPropos;
             mnuPointAide.Activated += OnMnuPointAide;
             // events combobox
@@ -166,9 +160,14 @@ namespace RafCompta
             // btnOuvrir.Clicked += OnBtnOuvrirClicked;
             btnEnregistrer.Clicked += OnBtnEnregistrerClicked;
             btnConsulterArchives.Clicked += OnBtnConsulterArchivesClicked;
+            chkSauverFichierAuto.Clicked += OnChkSauverFichierAutoClicked;
+            chkArchiverLigneRappro.Clicked += OnChkArchiverLigneRapproClicked;
+            btnOpeRecurrentes.Clicked += OnBtnOpeRecurrentesClicked;
             //
             txtSolde.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtEcart.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
+            txtCredits.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
+            txtDebits.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtInfo.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtNomCompte.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtNomFichierArchives.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
@@ -176,6 +175,10 @@ namespace RafCompta
             chkChargerFichierAuto.Sensitive = false;
             lblEcart.Visible = false;
             txtEcart.Visible = false;
+            lblCredits.Visible = false;
+            txtCredits.Visible = false;
+            lblDebits.Visible = false;
+            txtDebits.Visible = false;
             btnRapprocher.Visible = false;
             //
             Global.LireConfigLocal(ref strMsg);
@@ -202,6 +205,41 @@ namespace RafCompta
                 Global.AfficheInfo(txtInfo, "Créez un nouveau compte", new Gdk.Color(0,0,255));
             else
                 Global.AfficheInfo(txtInfo, "Sélectionnez un compte dans la liste déroulante, ou créez un nouveau compte", new Gdk.Color(0,0,255));
+        }
+
+        private void OnBtnOpeRecurrentesClicked(object sender, EventArgs e)
+        {
+            OnMnuActionsOpRecurrentes(sender, e);
+        }
+
+        private void OnChkArchiverLigneRapproClicked(object sender, EventArgs e)
+        {
+            Global.ConfigModified = true;
+        }
+
+        private void OnChkSauverFichierAutoClicked(object sender, EventArgs e)
+        {
+            Global.ConfigModified = true;
+        }
+
+        private void OnMnuActionsOpRecurrentes(object sender, EventArgs e)
+        {
+            if (Global.NomCompteCourant == string.Empty)
+			{
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				return;
+			}
+            txtInfo.Text = string.Empty;
+			OpeRecurrenteBox OpeRecurBox = new OpeRecurrenteBox(this, ref datas);
+            OpeRecurBox.Destroyed += delegate { OnOperBoxDestroyed(); };
+            OpeRecurBox.Show();
+        }
+
+        private void OnOperBoxDestroyed()
+        {
+            datas.DoFiltreDataTable();
+			UpdateTrvOperations();
+			DoCalcul();
         }
 
         private void OnBtnConsulterArchivesClicked(object sender, EventArgs e)
@@ -255,6 +293,7 @@ namespace RafCompta
             double dblSolde = Global.CompteCourant.dblSoldeInitial;
 			double dblEcart, dblTotalARapprocher=0;
 			bool bRapproche = false;
+            double dblTotalCredits=0, dblTotalDebits=0;
 
             // solde
             TreeIter iter;
@@ -280,6 +319,8 @@ namespace RafCompta
                         dblTotalARapprocher += Convert.ToDouble(datas.lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Credit)));
                         dblTotalARapprocher -= Convert.ToDouble(datas.lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Debit)));
                         bRapproche = true;
+                        dblTotalCredits += Convert.ToDouble(datas.lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Credit)));
+                        dblTotalDebits += Convert.ToDouble(datas.lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Debit)));
                     }
                 }
                 while (datas.lstoreOperations.IterNext(ref iter) == true);
@@ -291,6 +332,10 @@ namespace RafCompta
 			dblEcart -= Global.SoldeBanque;
 			dblEcart = Math.Round(dblEcart, 2);
             txtEcart.Text = dblEcart.ToString();
+            dblTotalCredits = Math.Round(dblTotalCredits, 2);
+            txtCredits.Text = dblTotalCredits.ToString();
+            dblTotalDebits = Math.Round(dblTotalDebits, 2);
+            txtDebits.Text = dblTotalDebits.ToString();
             if (dblEcart == 0)
 			{
 				// si une ligne sélectionnée
@@ -298,6 +343,10 @@ namespace RafCompta
 				{
 					lblEcart.Visible = true;
 					txtEcart.Visible = true;
+                    lblCredits.Visible = true;
+                    txtCredits.Visible = true;
+                    lblDebits.Visible = true;
+                    txtDebits.Visible = true;
 					btnRapprocher.Visible = true;
 					if (bAfficheMsg == true)
 						Global.AfficheInfo(txtInfo, "Vous pouvez effectuer un rapprochement", new Gdk.Color(0,0,255));
@@ -312,6 +361,10 @@ namespace RafCompta
 				{
 					lblEcart.Visible = true;
 					txtEcart.Visible = true;
+                    lblCredits.Visible = true;
+                    txtCredits.Visible = true;
+                    lblDebits.Visible = true;
+                    txtDebits.Visible = true;
 					if (bAfficheMsg == true)
 						Global.AfficheInfo(txtInfo, "Vous ne pouvez pas effectuer un rapprochement", new Gdk.Color(255,0,0));
 				}
@@ -319,6 +372,10 @@ namespace RafCompta
 				{
 					lblEcart.Visible = false;
 					txtEcart.Visible = false;
+                    lblCredits.Visible = false;
+                    txtCredits.Visible = false;
+                    lblDebits.Visible = false;
+                    txtDebits.Visible = false;
 					if (bAfficheMsg == true)
 						txtInfo.Text = string.Empty;
 				}
@@ -359,6 +416,10 @@ namespace RafCompta
 		{			
 			lblEcart.Visible = false;
 			txtEcart.Visible = false;
+            lblCredits.Visible = false;
+            txtCredits.Visible = false;
+            lblDebits.Visible = false;
+            txtDebits.Visible = false;
 			btnRapprocher.Visible = false;
 			
             TreeIter iter;
@@ -442,7 +503,7 @@ namespace RafCompta
 				return;
 			}
 			//
-            if (Confirmation("Supprimer compte:", "Voulez vous vraiment supprimer le compte courant ?\n(les fichiers d'opérations seront conservés)") == true)
+            if (Global.Confirmation("Supprimer compte:", "Voulez vous vraiment supprimer le compte courant ?\n(les fichiers d'opérations seront conservés)", this) == true)
             {
                 Global.SupprimeCompteCourant();
                 Global.ListeComptesModified = true;
@@ -510,7 +571,7 @@ namespace RafCompta
 		{
 			if (IsModified() == true)
 			{
-				if (Confirmation(strCaption, "Voulez-vous enregistrer les modifications ?") == true)
+				if (Global.Confirmation(strCaption, "Voulez-vous enregistrer les modifications ?", this) == true)
 				{
 					SauveDonneesComptes();
 					SauveDonneesOperations();
@@ -608,7 +669,7 @@ namespace RafCompta
 			if (IsModified() == true || Global.ListeComptesModified == true)
 			{
 				if (	Global.SauveFichierAuto == true
-				   ||	Confirmation("Quitter:", "Voulez-vous enregistrer les modifications ?") == true
+				   ||	Global.Confirmation("Quitter:", "Voulez-vous enregistrer les modifications ?", this) == true
 				   )
 				{
 					SauveDonneesComptes();
@@ -649,8 +710,8 @@ namespace RafCompta
             cellSelect.Toggled += delegate(object o, ToggledArgs args)
             {
 				TreeIter iter;
-				if (datas.lstoreOperations.GetIter (out iter, new TreePath (args.Path)))
-					datas.lstoreOperations.SetValue (iter, 0, !(bool)datas.lstoreOperations.GetValue (iter, 0));
+				if (datas.lstoreOperations.GetIter(out iter, new TreePath (args.Path)))
+					datas.lstoreOperations.SetValue(iter, 0, !(bool)datas.lstoreOperations.GetValue(iter, 0));
                 DoCalcul();
 			};
 
@@ -750,6 +811,7 @@ namespace RafCompta
 			}
 			txtInfo.Text = string.Empty;
 			datas.AjouteBoxOperation();
+            datas.DoFiltreDataTable();
 			UpdateTrvOperations();
 			DoCalcul();
         }
@@ -778,6 +840,7 @@ namespace RafCompta
             if (datas.lstoreOperations.GetIter(out iter, chemin))
             {
                 datas.ModifieOperation(iter);
+                datas.DoFiltreDataTable();
                 UpdateTrvOperations();
                 DoCalcul();
             }
@@ -801,7 +864,7 @@ namespace RafCompta
                 Global.AfficheInfo(txtInfo, "Vous devez sélectionner une ligne à supprimer", new Gdk.Color(255,0,0));
                 return;
             }
-            if (Confirmation("Suppression:", "Voulez-vous vraiment supprimer la ligne sélectionnée ?") == false)
+            if (Global.Confirmation("Suppression:", "Voulez-vous vraiment supprimer la ligne sélectionnée ?", this) == false)
 				return;
 
             chemin = chemins[0];

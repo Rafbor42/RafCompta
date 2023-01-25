@@ -243,6 +243,21 @@
                 <property name="y">170</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkCheckButton" id="chkRecurrente">
+                <property name="label" translatable="yes">Opération récurrente</property>
+                <property name="width-request">147</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="draw-indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">332</property>
+                <property name="y">170</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
