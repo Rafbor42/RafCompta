@@ -7,13 +7,14 @@
     - [Saisir des opérations](#saisir-des-opérations)
     - [Effectuer le rapprochement bancaire](#effectuer-le-rapprochement-bancaire)
     - [Opérations récurrentes](#opérations-récurrentes)
-  - [Paramètres du compte courant](#paramètres-du-compte-courant)
+    - [Transfert entre comptes](#transfert-entre-comptes)
+  - [Paramètres du compte actif](#paramètres-du-compte-actif)
   - [Consulter les archives](#consulter-les-archives)
   - [Développement et installation](#développement-et-installation)
   - [Notes de version](#notes-de-version)
   - [Téléchargements](#téléchargements)
     - [Dernière version](#dernière-version)
-    - [Anciennes versions](#anciennes-versions)
+    - [Ancienne version](#ancienne-version)
     - [Installation sur Linux](#installation-sur-linux)
 
 ![Mainwin](images/markdown/mainwin.png)
@@ -77,14 +78,23 @@ Par le menu **Actions** -> **Opérations récurrentes** ou par le bouton équiva
 
 ![OperationsRecurrentes](images/markdown/operation_recurrente.png)
 
-Cocher les lignes d'opérations à ajouter au compte courant, le bouton _Ajouter au compte_ apparait. La date d'ajout sera fixée au jour indiqué, pour le mois courant.
+Cocher les lignes d'opérations à ajouter au compte actif, le bouton _Ajouter au compte_ apparait. La date d'ajout sera fixée au jour indiqué, pour le mois courant.
 On peut supprimer ou modifier une opération en sélectionnant la ligne.
 
-Chaque opération est identifiée par une clé unique, si l'opération existe déjà dans le compte courant, elle sera ignorée:
+Chaque opération est identifiée par une clé unique, si l'opération existe déjà dans le compte actif, elle sera ignorée:
 
 ![OperecurrenteIgnoree](images/markdown/operecurrente_ignoree.png)
 
-## Paramètres du compte courant
+### Transfert entre comptes
+
+Par le menu **Actions** -> **Transfert entre comptes** ou par le bouton équivalent dans la fenêtre principale, on accède à la fenêtre de transfert:
+
+![Transfert](images/markdown/transfert.png)
+
+Renseigner le compte destinataire, un libellé d'opération et le montant. Le compte à débiter est toujours le compte actif. Le compte destinataire ne peut pas être le compte actif.
+Après validation, l'opération est enregistrée en tant que virement au débit sur le compte courant et au crédit sur le compte destinataire, à la date courante.
+
+## Paramètres du compte actif
 
 ![Parametres](images/markdown/parametres.png)
 
@@ -93,12 +103,12 @@ On peut modifier à tout moment le solde initial du compte.
 Les paramètres globaux concernent l'application:
 
 - _Charger le fichier après sélection du compte_: toujours coché.
-Le fichier de compte se charge automatiquement lorsqu'on sélectionne un compte dans la liste déroulante _Compte courant_.
+Le fichier de compte se charge automatiquement lorsqu'on sélectionne un compte dans la liste déroulante _Compte_.
 - _Sauvegarder le fichier de comptes à la fermeture_: si coché, les fichiers sont sauvegardés automatiquement à la fermeture de l'application.
 - _Archiver les lignes rapprochées_: si coché, les lignes sont archivées lors du rapprochement bancaire.
 
 Certains de ces paramètres sont prédéfinis dans le fichier de configuration de l'application _app.config_. Ils sont mis à jour à la fermeture de l'application. Le nom par défaut du fichier de données des comptes _ListeComptes.xml_ n'est pas modifiable dans l'application, mais directement dans le fichier de configuration.
-Idem pour la clé des opérations récurrentes _KeyOpeRecur_ qui est géré par l'application et **ne doit pas être modifié**.
+Idem pour la clé des opérations récurrentes _KeyOpeRecur_  et le nom du dernier compte utilisé _DernierCompteActif_ qui sont gérés par l'application et **ne doivent pas être modifiés**.
 
 ```text
 <appSettings>
@@ -106,12 +116,13 @@ Idem pour la clé des opérations récurrentes _KeyOpeRecur_ qui est géré par 
 <add key="SauveFichierAuto" value="true" />
 <add key="ArchiveLigneRappro" value="true" />
 <add key="KeyOpeRecur" value="0" />
+<add key="DernierCompteActif" value="" />
 </appSettings>
 ```
 
 ## Consulter les archives
 
-Par le menu **Ficher** -> **Consulter archive** ou en cliquant sur le bouton équivalent on peut consulter les archives du compte courant. Une fenêtre affiche d'abord les fichiers disponibles (1 fichier par année):
+Par le menu **Ficher** -> **Consulter archive** ou en cliquant sur le bouton équivalent on peut consulter les archives du compte actif. Une fenêtre affiche d'abord les fichiers disponibles (1 fichier par année):
 
 ![SelectArchive](images/markdown/select_archive.png)
 
@@ -147,29 +158,34 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ## Notes de version
 
-- **1.3.0113.1**
-    Première version publiée.
-- **1.3.0116.0**
-  - Ajout contrôle sur saisie simultanée de débit et de crédit et prise en compte de la valeur absolue des valeurs.
-  - Suppression du menu **Fichier**->**Ouvrir** et du bouton associé (le chargement des données comptes est automatique).
-  - Au lancement de l'application, si aucun compte n'existe, on enchaîne sur la création d'un compte.
+- **1.4.0130.0**
+  - Bugfix sur l'insertion d'opération récurrente, quand la date du jour est supérieure au nombre de jours du mois courant.
+  - A l'ouverture, on charge le dernier compte utilisé.
+  - Changé libellés dans les labels et les messages: _compte courant_ devient _compte actif_.
+  - Ajout gestion de transfert entre comptes.
 - **1.4.0125.0**
   - Bugfix sur sauvegarde de la configuration.
   - Ajout affichage des totaux débits et crédits des lignes sélectionnées.
   - Ajout gestion des opérations récurrentes.
   - Corrections mineures.
+- **1.3.0116.0**
+  - Ajout contrôle sur saisie simultanée de débit et de crédit et prise en compte de la valeur absolue des valeurs.
+  - Suppression du menu **Fichier**->**Ouvrir** et du bouton associé (le chargement des données comptes est automatique).
+  - Au lancement de l'application, si aucun compte n'existe, on enchaîne sur la création d'un compte.
+- **1.3.0113.1**
+    Première version publiée.
 
 ## Téléchargements
 
 ### Dernière version
 
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_avec_runtime.tar.xz)
+
+### Ancienne version
+
 - **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_sans_runtime.tar.xz)
 - **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_avec_runtime.tar.xz)
-
-### Anciennes versions
-
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.3.0116.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.3.0116.0_avec_runtime.tar.xz)
 
 ### Installation sur Linux
 

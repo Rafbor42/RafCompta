@@ -32,6 +32,16 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-paste</property>
   </object>
+  <object class="GtkImage" id="image15">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-convert</property>
+  </object>
+  <object class="GtkImage" id="image17">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-convert</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -99,7 +109,7 @@
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte courant</property>
+                        <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte actif</property>
                         <property name="use-underline">True</property>
                         <property name="use-stock">True</property>
                         <property name="always-show-image">True</property>
@@ -116,7 +126,7 @@
                         <property name="label" translatable="yes">Consulter archive</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Consulter les archives du compte courant</property>
+                        <property name="tooltip-text" translatable="yes">Consulter les archives du compte actif</property>
                         <property name="image">image1</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
@@ -218,8 +228,19 @@
                         <property name="label" translatable="yes">Opérations récurrentes</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Gestion des opérations récurrentes du compte courant</property>
+                        <property name="tooltip-text" translatable="yes">Gérer les opérations récurrentes du compte actif</property>
                         <property name="image">image11</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuActionTransfert">
+                        <property name="label" translatable="yes">Transfert entre comptes</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Effectuer un transfert depuis le compte actif vers un autre compte</property>
+                        <property name="image">image15</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
@@ -280,7 +301,7 @@
                 <property name="height-request">34</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Compte courant</property>
+                <property name="label" translatable="yes">Compte</property>
                 <property name="xalign">0.949999988079071</property>
               </object>
               <packing>
@@ -305,7 +326,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte courant</property>
+                <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte actif</property>
                 <property name="image">image12</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -317,7 +338,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Consulter les archives du compte courant</property>
+                <property name="tooltip-text" translatable="yes">Consulter les archives du compte actif</property>
                 <property name="image">image13</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -332,12 +353,27 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Gestion des opérations récurrentes du compte courant</property>
+                <property name="tooltip-text" translatable="yes">Gérer les opérations récurrentes du compte actif</property>
                 <property name="image">image14</property>
                 <property name="always-show-image">True</property>
               </object>
               <packing>
                 <property name="x">76</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnTransfert">
+                <property name="width-request">34</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Effectuer un transfert depuis le compte actif vers un autre compte</property>
+                <property name="image">image17</property>
+                <property name="always-show-image">True</property>
+              </object>
+              <packing>
+                <property name="x">114</property>
               </packing>
             </child>
           </object>
@@ -428,12 +464,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="lblCompteCourant">
+                  <object class="GtkLabel" id="lblCompteactif">
                     <property name="width-request">109</property>
                     <property name="height-request">34</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Compte courant</property>
+                    <property name="label" translatable="yes">Compte actif</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                       <attribute name="underline" value="True"/>
@@ -553,7 +589,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="lblCompteCourant1">
+                  <object class="GtkLabel" id="lblCompteactif1">
                     <property name="width-request">109</property>
                     <property name="height-request">34</property>
                     <property name="visible">True</property>
@@ -678,7 +714,7 @@
                 <property name="height-request">34</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="tooltip-text" translatable="yes">Solde du compte courant (solde initial + crédits - débits de toutes les lignes)</property>
+                <property name="tooltip-text" translatable="yes">Solde du compte actif (solde initial + crédits - débits de toutes les lignes)</property>
                 <property name="halign">start</property>
                 <property name="editable">False</property>
                 <property name="max-length">12</property>

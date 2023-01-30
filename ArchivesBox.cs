@@ -303,7 +303,7 @@ namespace RafCompta
             trvOperations.ShowAll();
         }
 
-        // Ouverture du fichier d'archives du compte courant.
+        // Ouverture du fichier d'archives du compte actif.
 		void OuvrirFichier(string strFileName)
 		{
 			string strMsg = string.Empty;

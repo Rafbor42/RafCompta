@@ -118,7 +118,7 @@ namespace RafCompta
 			}
         }
 
-        // Récupère dans un ListStore la liste des fichiers d'archives du compte courant.
+        // Récupère dans un ListStore la liste des fichiers d'archives du compte actif.
         public void GetListeArchivesCompteCourant()
 		{
 			string strFileName;
@@ -822,12 +822,20 @@ namespace RafCompta
 			Int16 nKey
 		)
 		{
+			int nDay, nDays;
+			DateTime dtDate;
+
 			foreach(DataRow row in dtTableOperationsRecur.Select("nKey=" + nKey))
 			{
 				if (row.RowState == DataRowState.Deleted)
 					continue;
-
-				DateTime dtDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Convert.ToDateTime(row["dtDate"]).Day);
+				// vérifier si le jour est dans le mois
+				nDay = Convert.ToDateTime(row["dtDate"]).Day;
+				nDays = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+				if (nDay > nDays)
+					nDay = nDays;
+				//
+				dtDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, nDay);
 				AjouteOperation(dtDate,
 								row["strOperation"].ToString(),
 								row["strModePaiement"].ToString(),
@@ -912,5 +920,42 @@ namespace RafCompta
 			}
 			return false;
 		}
+
+		public void DoTransfert(string strOperation, double dblMontant, string strCompteDest, ref string strMsg)
+		{
+			dblMontant = Math.Round(dblMontant, 2);
+			// ajout en débit sur le compte actif
+			AjouteOperation(DateTime.Now, strOperation, Global.arListItem[5].ToString(), 0, dblMontant, false, 0, false);
+			// ajout en crédit sur le compte destination
+			EnregistreOperation(strCompteDest, strOperation, dblMontant, ref strMsg);
+		}
+
+        private void EnregistreOperation(string strCompteDest, string strOperation, double dblMontant, ref string strMsg)
+        {
+			XmlTextWriter XMLWriter = null;
+			string strPathFichier = Path.Combine(Global.DossierFichiers, strCompteDest + ".xml");
+			try
+			{
+				XElement xmlElt = XElement.Load(strPathFichier);
+				// ajout donnée dans le fichier
+				XElement newElt = new XElement("Opération",
+								new XElement("ModePaiement", Global.arListItem[5].ToString()),
+								new XElement("Date", DateTime.Now.ToShortDateString()),
+								new XElement("Libellé", strOperation),
+								new XElement("Crédit", dblMontant.ToString()),
+								new XElement("Débit", "0"));
+				xmlElt.Element("Opérations").Add(newElt);
+				xmlElt.Save(strPathFichier);
+			}
+			catch (Exception ex)
+			{
+				strMsg += ex.Message;
+			}
+			finally
+			{
+				if (XMLWriter != null)
+					XMLWriter.Close();
+			}
+        }
     }
 }

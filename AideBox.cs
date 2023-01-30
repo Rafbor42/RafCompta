@@ -76,7 +76,7 @@ namespace RafCompta
         {
             buffer.Insert(ref insertIter, "Le séparateur décimal est celui définit dans les paramètres linguistiques, soit la virgule pour la France. Dans les zones de saisie de nombres, le point est automatiquement remplacé par une virgule.\n\n");
             buffer.InsertWithTagsByName(ref insertIter, "Pour effectuer un rapprochement:\n", "bold", "underline");
-            buffer.Insert(ref insertIter, "- renseigner le solde banque puis sélectionner les lignes à rapprocher (cocher la case à gauche).\n\n");
+            buffer.Insert(ref insertIter, "- renseigner le solde banque puis cocher les lignes à rapprocher.\n\n");
             buffer.Insert(ref insertIter,  "=> l'écart est recalculé, s'il est égal à 0, le bouton 'Rapprocher' s'affiche.\n");
             buffer.Insert(ref insertIter,  "=> dans l'onglet 'Paramètres', si 'Archiver les lignes rapprochées' est coché, ces lignes seront ajoutées au fichier d'archives.\n\n");
             buffer.InsertWithTagsByName(ref insertIter, "NB: ", "bold");

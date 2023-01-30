@@ -71,6 +71,7 @@ namespace RafCompta
         private static string strAppStartupPath;
         private static string strDossierFichiers;
 		private static Int16 nKeyOpeRecur;
+		private static string strDernierCompteActif;
 		//
 		public static string FichierDonneesComptes { get => strFichierDonneesComptes; set => strFichierDonneesComptes = value; }
 		public static bool ConfigModified {	get => bConfigModified; set => bConfigModified = value; }
@@ -84,6 +85,7 @@ namespace RafCompta
         public static bool ArchiveLigneRappro { get => bArchiveLigneRappro; set => bArchiveLigneRappro = value; }
         public static bool FichierCompteNonTrouve { get => bFichierCompteNonTrouve; set => bFichierCompteNonTrouve = value; }
         public static short KeyOpeRecur { get => nKeyOpeRecur; set => nKeyOpeRecur = value; }
+        public static string DernierCompteActif { get => strDernierCompteActif; set => strDernierCompteActif = value; }
 
         public enum eTrvOperationsCols
 		{
@@ -118,13 +120,14 @@ namespace RafCompta
 			ArchiveLigneRappro = true;
 			KeyOpeRecur = 0;
 			FichierCompteNonTrouve = false;
+			DernierCompteActif = string.Empty;
 			//
 			ConfigModified = false;
 			ListeComptesModified = false;
 			SoldeBanque = 0;
 			//
 			FichierDonneesComptes = "ListeComptes.xml";
-			NomCompteCourant = "";
+			NomCompteCourant = string.Empty;
 			//
 			AppStartupPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 			DossierFichiers = AppStartupPath + Path.DirectorySeparatorChar + "Fichiers";
@@ -190,11 +193,13 @@ namespace RafCompta
         	{
         		if (ConfigurationManager.AppSettings["FichierDonneesComptes"] != String.Empty)
 					FichierDonneesComptes = ConfigurationManager.AppSettings["FichierDonneesComptes"];
-        		//
-        		//ChargeFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["ChargeFichierAuto"]); toujours vrai
-	       		SauveFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["SauveFichierAuto"]);
+
+        		SauveFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["SauveFichierAuto"]);
     	   		ArchiveLigneRappro = Convert.ToBoolean(ConfigurationManager.AppSettings["ArchiveLigneRappro"]);
 				KeyOpeRecur = Convert.ToInt16(ConfigurationManager.AppSettings["KeyOpeRecur"]);
+
+				if (ConfigurationManager.AppSettings["DernierCompteActif"] != String.Empty)
+					DernierCompteActif = ConfigurationManager.AppSettings["DernierCompteActif"];
         	}
         	catch (Exception ex)
 			{
@@ -241,9 +246,6 @@ namespace RafCompta
 				            if (node.Attributes[0].Value.Equals("FichierDonneesComptes"))
 				            	node.Attributes[1].Value = FichierDonneesComptes;
 				            //
-				            // if (node.Attributes[0].Value.Equals("ChargeFichierAuto")) // toujours vrai
-				            // 	node.Attributes[1].Value = ChargeFichierAuto.ToString();
-				            //
 				            if (node.Attributes[0].Value.Equals("SauveFichierAuto"))
 				            	node.Attributes[1].Value = SauveFichierAuto.ToString();
 				            //
@@ -252,6 +254,9 @@ namespace RafCompta
 							//
 				            if (node.Attributes[0].Value.Equals("KeyOpeRecur"))
 				            	node.Attributes[1].Value = KeyOpeRecur.ToString();
+							//
+							if (node.Attributes[0].Value.Equals("DernierCompteActif"))
+				            	node.Attributes[1].Value = DernierCompteActif;
 				    	}
 				    }
 				}
@@ -265,7 +270,7 @@ namespace RafCompta
 		}
 		
 		/// <summary>
-		/// Recherche le compte courant.
+		/// Recherche le compte actif.
 		/// </summary>
 		/// <returns></returns>
 		public static void GetCompteCourant()
@@ -281,7 +286,7 @@ namespace RafCompta
 		}
 		
 		/// <summary>
-		/// Redéfinit le compte courant dans la collection.
+		/// Redéfinit le compte actif dans la collection.
 		/// </summary>
 		public static void SetCompteCourant()
 		{

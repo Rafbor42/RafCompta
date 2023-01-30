@@ -61,6 +61,7 @@ namespace RafCompta
         [UI] private MenuItem mnuActionSupprimerOperation = null;
         [UI] private MenuItem mnuActionModifierOperation = null;
         [UI] private MenuItem mnuActionOpeRecurrentes = null;
+        [UI] private MenuItem mnuActionTransfert = null;
         [UI] private MenuItem mnuPointAPropos = null;
         [UI] private MenuItem mnuPointAide = null;
         //
@@ -80,6 +81,7 @@ namespace RafCompta
         [UI] private Button btnEnregistrer = null;
         [UI] private Button btnConsulterArchives = null;
         [UI] private Button btnOpeRecurrentes = null;
+        [UI] private Button btnTransfert = null;
         [UI] private Label lblEcart = null;
         [UI] private Label lblCredits = null;
         [UI] private Label lblDebits = null;
@@ -143,6 +145,7 @@ namespace RafCompta
             mnuActionModifierOperation.Activated += OnMnuActionsModifierOperation;
             mnuActionSupprimerOperation.Activated += OnMnuActionsSupprimerOperation;
             mnuActionOpeRecurrentes.Activated += OnMnuActionsOpRecurrentes;
+            mnuActionTransfert.Activated += OnMnuActionTransfert;
             mnuPointAPropos.Activated += OnMnuPointAPropos;
             mnuPointAide.Activated += OnMnuPointAide;
             // events combobox
@@ -163,6 +166,7 @@ namespace RafCompta
             chkSauverFichierAuto.Clicked += OnChkSauverFichierAutoClicked;
             chkArchiverLigneRappro.Clicked += OnChkArchiverLigneRapproClicked;
             btnOpeRecurrentes.Clicked += OnBtnOpeRecurrentesClicked;
+            btnTransfert.Clicked += OnBtnTransfertClicked;
             //
             txtSolde.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtEcart.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
@@ -203,8 +207,27 @@ namespace RafCompta
             //
             if (nbComptes == 0)
                 Global.AfficheInfo(txtInfo, "Créez un nouveau compte", new Gdk.Color(0,0,255));
-            else
+            else if (Global.DernierCompteActif == string.Empty)
                 Global.AfficheInfo(txtInfo, "Sélectionnez un compte dans la liste déroulante, ou créez un nouveau compte", new Gdk.Color(0,0,255));
+            //
+            // on se positionne sur le dernier compte actif, cela entraine le chargement des données du compte
+            if (Global.DernierCompteActif != string.Empty)
+            {
+                for (int i = 0; i < Global.arComptes.Count; i++)
+                {
+                    Global.sCompte sCompte = (Global.sCompte)Global.arComptes[i];
+                    if (sCompte.strNomCompte.Equals(Global.DernierCompteActif))
+                    {
+                        cbListeComptes.Active = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void OnBtnTransfertClicked(object sender, EventArgs e)
+        {
+            OnMnuActionTransfert(sender, e);
         }
 
         private void OnBtnOpeRecurrentesClicked(object sender, EventArgs e)
@@ -226,7 +249,7 @@ namespace RafCompta
         {
             if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
             txtInfo.Text = string.Empty;
@@ -388,7 +411,7 @@ namespace RafCompta
         {
             if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
             if (datas.dtTableArchOperations.Rows.Count > 0)
@@ -482,7 +505,7 @@ namespace RafCompta
 			 	Global.ListeComptesModified = true;
 			}
 		}
-        // Destruction de la boite OperationBox.
+        // Destruction de la boite AjoutCompteBox.
 		private void OnAjoutCompteBoxDestroyed(ref string strNomCompte, ref double dblSoldeInitial)
         {
             if (ajoutCompteBox.rResponse == ResponseType.Ok)
@@ -499,11 +522,11 @@ namespace RafCompta
 
 			if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
 			//
-            if (Global.Confirmation("Supprimer compte:", "Voulez vous vraiment supprimer le compte courant ?\n(les fichiers d'opérations seront conservés)", this) == true)
+            if (Global.Confirmation("Supprimer compte:", "Voulez vous vraiment supprimer le compte actif ?\n(les fichiers d'opérations seront conservés)", this) == true)
             {
                 Global.SupprimeCompteCourant();
                 Global.ListeComptesModified = true;
@@ -536,7 +559,7 @@ namespace RafCompta
             Global.sCompte compte;
 			string strItem = string.Empty;
 
-            // on sauve l'item courant
+            // on sauve l'item actif
             if (cbListeComptes.Active > -1)
             {
                 strItem = cbListeComptes.ActiveText;
@@ -637,6 +660,8 @@ namespace RafCompta
 				//
 				Global.NomCompteCourant = strItem;
 				Global.GetCompteCourant();
+                Global.DernierCompteActif = strItem;
+                Global.ConfigModified = true;
 				UpdateData(true);
 				OuvrirFichier();
 				DoCalcul(false);
@@ -747,7 +772,7 @@ namespace RafCompta
 		// {
 		// 	if (Global.NomCompteCourant == string.Empty)
 		// 	{
-		// 		Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+		// 		Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte actif", new Gdk.Color(255,0,0));
 		// 		return;
 		// 	}
 		// 	txtInfo.Text = string.Empty;
@@ -757,7 +782,7 @@ namespace RafCompta
 		// }
 
         /// <summary>
-		/// Ouverture du fichier de compte courant.
+		/// Ouverture du fichier de compte actif.
 		/// </summary>
 		void OuvrirFichier()
 		{
@@ -791,7 +816,7 @@ namespace RafCompta
 		{
 			if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
 			txtInfo.Text = string.Empty;
@@ -801,12 +826,38 @@ namespace RafCompta
 			SauveArchivesOperations();
 		}
 
+        private void OnMnuActionTransfert(object sender, EventArgs e)
+        {
+            if (Global.NomCompteCourant == string.Empty)
+			{
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
+				return;
+			}
+            if (Global.arComptes.Count < 2)
+            {
+				Global.AfficheInfo(txtInfo, "Impossible: vous devez posséder au moins 2 comptes", new Gdk.Color(255,0,0));
+				return;
+			}
+            txtInfo.Text = string.Empty;
+			TransfertBox TransfBox = new TransfertBox(this, ref datas, Convert.ToDouble(txtSolde.Text));
+            TransfBox.Destroyed += delegate { OnTransfertBoxDestroyed(); };
+            TransfBox.ShowAll();
+        }
+
+        private void OnTransfertBoxDestroyed()
+        {
+            datas.DoFiltreDataTable();
+			UpdateTrvOperations();
+			DoCalcul();
+            Global.AfficheInfo(txtInfo, "Transfert terminé", new Gdk.Color(0,0,255));
+        }
+
         // Click sur bouton 'Ajouter opération'.
         private void OnBtnAjouterOperationClicked(object sender, EventArgs a)
         {
             if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
 			txtInfo.Text = string.Empty;
@@ -821,7 +872,7 @@ namespace RafCompta
         {
             if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
             
@@ -849,7 +900,7 @@ namespace RafCompta
         {
             if (Global.NomCompteCourant == string.Empty)
 			{
-				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte courant", new Gdk.Color(255,0,0));
+				Global.AfficheInfo(txtInfo, "Impossible: veuillez d'abord sélectionner un compte", new Gdk.Color(255,0,0));
 				return;
 			}
             

@@ -77,7 +77,7 @@ namespace RafCompta
             txtInfo.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
         }
 
-        // Ajout des lignes sélectionnées au compte courant.
+        // Ajout des lignes sélectionnées au compte actif.
         private void OnBtnAjouterClicked(object sender, EventArgs e)
         {
             TreeIter iter;
@@ -92,7 +92,7 @@ namespace RafCompta
                     if (Convert.ToBoolean(mdatas.lstoreOperationsRecur.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Select))) == true)
                     {
                         nKey = Convert.ToInt16(mdatas.lstoreOperationsRecur.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
-                        // si opération existe déjà sur le compte courant, on l'ignore
+                        // si opération existe déjà sur le compte actif, on l'ignore
                         if (mdatas.IsOperationExistante(nKey) == true)
                             nLignesIgnorees++;
                         else
@@ -104,7 +104,7 @@ namespace RafCompta
                 }
                 while (mdatas.lstoreOperationsRecur.IterNext(ref iter) == true);
             }
-			Global.ShowMessage("Ajout d'opérations sur Compte courant:", nLignesAjoutees + " ajoutée(s)\n" + nLignesIgnorees + " ignorée(s) car déjà existante(s)", this, MessageType.Info);
+			Global.ShowMessage("Ajout d'opérations sur compte actif:", nLignesAjoutees + " ajoutée(s)\n" + nLignesIgnorees + " ignorée(s) car déjà existante(s)", this, MessageType.Info);
 			UpdateTrvOperations();
         }
         
@@ -159,7 +159,7 @@ namespace RafCompta
         private void UpdateTrvOperations()
         {
             trvOperations.ShowAll();
-            Global.AfficheInfo(txtInfo, "Cocher les lignes à ajouter au compte courant", new Gdk.Color(0,0,255));
+            Global.AfficheInfo(txtInfo, "Cocher les lignes à ajouter au compte actif", new Gdk.Color(0,0,255));
         }
 
         // Initialisation du treeview des opérations.
