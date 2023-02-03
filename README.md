@@ -158,6 +158,10 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ## Notes de version
 
+- **1.4.0203.1**
+  - Suppression des demandes d'enregistrement lors du changement de compte ou de la consultation des archives, si la sauvegarde auto est activée.
+  - Les opérations de transfert ne sont plus enregistrées directement dans le compte destinataire mais stockées dans un DataTable.
+  - Ajout nom du compte dans le titre de la fenêtre.
 - **1.4.0130.0**
   - Bugfix sur l'insertion d'opération récurrente, quand la date du jour est supérieure au nombre de jours du mois courant.
   - A l'ouverture, on charge le dernier compte utilisé.
@@ -179,13 +183,13 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ### Dernière version
 
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_avec_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_avec_runtime.tar.xz)
 
 ### Ancienne version
 
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0125.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0125.0_avec_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_avec_runtime.tar.xz)
 
 ### Installation sur Linux
 

@@ -238,11 +238,13 @@ namespace RafCompta
         private void OnChkArchiverLigneRapproClicked(object sender, EventArgs e)
         {
             Global.ConfigModified = true;
+            Global.ArchiveLigneRappro = chkArchiverLigneRappro.Active;
         }
 
         private void OnChkSauverFichierAutoClicked(object sender, EventArgs e)
         {
             Global.ConfigModified = true;
+            Global.SauveFichierAuto = chkSauverFichierAuto.Active;
         }
 
         private void OnMnuActionsOpRecurrentes(object sender, EventArgs e)
@@ -415,7 +417,12 @@ namespace RafCompta
 				return;
 			}
             if (datas.dtTableArchOperations.Rows.Count > 0)
-				Global.ShowMessage("Archives:", "Attention, les derniers rapprochements n'ont pas été archivés\nEnregistrer vos données pour avoir des archives complètes", this);
+            {
+                if (Global.SauveFichierAuto == true)
+                    OnMnuFichierEnregistrer(sender, e);
+                else
+    				Global.ShowMessage("Archives:", "Attention, les derniers rapprochements n'ont pas été archivés\nEnregistrer vos données pour avoir des archives complètes", this);
+            }
 			//
             ListeArchivesBox listeArchivesBox = new ListeArchivesBox(this, ref datas);
             listeArchivesBox.ShowAll();
@@ -599,9 +606,18 @@ namespace RafCompta
 					SauveDonneesComptes();
 					SauveDonneesOperations();
 					SauveArchivesOperations();
+                    SauveOperationsTransfert();
 				}
 			}
 		}
+
+        private void SauveOperationsTransfert()
+        {
+            string strMsg = string.Empty;
+            datas.EnregistreOperationsTransfert(ref strMsg);
+            if (strMsg != string.Empty)
+				Global.ShowMessage("Erreur fichier:", strMsg, this);
+        }
 
         // Vérifie si les données initiales ont été modifiées.
         // <returns>vrai si modifiées, faux sinon</returns>
@@ -656,11 +672,15 @@ namespace RafCompta
 			
 			if (strItem != string.Empty)
 			{
-				ConfirmeSiDataModifiees("Ouvrir compte:");
+                if (Global.SauveFichierAuto == true)
+                    OnMnuFichierEnregistrer(sender, a);
+                else
+				    ConfirmeSiDataModifiees("Ouvrir compte:");
 				//
 				Global.NomCompteCourant = strItem;
 				Global.GetCompteCourant();
                 Global.DernierCompteActif = strItem;
+                this.Title = "RafCompta - " + strItem;
                 Global.ConfigModified = true;
 				UpdateData(true);
 				OuvrirFichier();
@@ -700,6 +720,7 @@ namespace RafCompta
 					SauveDonneesComptes();
 					SauveDonneesOperations();
 					SauveArchivesOperations();
+                    SauveOperationsTransfert();
 				}
 			}
 		}
@@ -824,6 +845,7 @@ namespace RafCompta
 			SauveDonneesComptes();
 			SauveDonneesOperations();
 			SauveArchivesOperations();
+            SauveOperationsTransfert();
 		}
 
         private void OnMnuActionTransfert(object sender, EventArgs e)

@@ -79,7 +79,7 @@ namespace RafCompta
 
         void OnBtnOkClicked(object sender, EventArgs e)
 		{
-            string strCompteDest, strMsg = string.Empty;
+            string strCompteDest;
             double dblVal;
 
             strCompteDest = cbListeComptes.ActiveText;
@@ -116,9 +116,7 @@ namespace RafCompta
                 }
             }
             //
-            mdatas.DoTransfert(txtOperation.Text, Convert.ToDouble(txtMontant.Text), strCompteDest, ref strMsg);
-			if (strMsg != string.Empty)
-                Global.ShowMessage("Erreur écriture fichier compte destinataire :", strMsg, this);
+            mdatas.DoTransfert(txtOperation.Text, Convert.ToDouble(txtMontant.Text), strCompteDest);
             this.Dispose();
 		}
         void OnBtnCancelClicked(object sender, EventArgs e)

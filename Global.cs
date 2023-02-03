@@ -116,7 +116,7 @@ namespace RafCompta
 			arComptes = new ArrayList();
 			//
 			ChargeFichierAuto = true;
-			SauveFichierAuto = false;
+			SauveFichierAuto = true;
 			ArchiveLigneRappro = true;
 			KeyOpeRecur = 0;
 			FichierCompteNonTrouve = false;

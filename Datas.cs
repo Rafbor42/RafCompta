@@ -50,7 +50,7 @@ namespace RafCompta
 	{
 		public Window pParentWindow=null;
 		public DataTable dtTableOperations, dtTableArchOperations, dtTableOperationsArchivees;
-		public DataTable dtTableOperationsRecur;
+		public DataTable dtTableOperationsRecur, dtTableOperationsTransfert;
 		public ListStore lstoreOperations, lstoreOperationsRecur;
 		public ListStore lstoreOperationsArchivees, lstoreListeArchives;
 		private OperationBox OperBox;
@@ -88,6 +88,8 @@ namespace RafCompta
 			dtTableOperationsRecur.Columns.Add("dblCredit", typeof(Double));
 			dtTableOperationsRecur.Columns.Add("dblDebit", typeof(Double));
 			//
+			dtTableOperationsTransfert = dtTableOperationsRecur.Clone();
+			//
             lstoreOperations = new ListStore(typeof(bool), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(Int16));
             lstoreOperationsArchivees = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(Int16));
 			lstoreListeArchives = new ListStore(typeof(string));
@@ -101,6 +103,7 @@ namespace RafCompta
 			dtTableOperations.Clear();
 			dtTableArchOperations.Clear();
 			dtTableOperationsArchivees.Clear();
+			dtTableOperationsTransfert.Clear();
 			lstoreOperations.Clear();
 			lstoreOperationsRecur.Clear();
 			GetListeArchivesCompteCourant();
@@ -921,40 +924,81 @@ namespace RafCompta
 			return false;
 		}
 
-		public void DoTransfert(string strOperation, double dblMontant, string strCompteDest, ref string strMsg)
+		public void DoTransfert
+		(
+			string strOperation,
+			double dblMontant,
+			string strCompteDest
+		)
 		{
 			dblMontant = Math.Round(dblMontant, 2);
-			// ajout en débit sur le compte actif
+			// ajout au débit sur le compte actif
 			AjouteOperation(DateTime.Now, strOperation, Global.arListItem[5].ToString(), 0, dblMontant, false, 0, false);
-			// ajout en crédit sur le compte destination
-			EnregistreOperation(strCompteDest, strOperation, dblMontant, ref strMsg);
+			// ajout au crédit sur le compte destination
+			AjouteOperationsTransfert(strCompteDest, strOperation, dblMontant);
 		}
 
-        private void EnregistreOperation(string strCompteDest, string strOperation, double dblMontant, ref string strMsg)
+		private void AjouteOperationsTransfert
+		(
+			string strCompteDest,
+			string strOperation,
+			double dblMontant
+		)
+		{
+			DataRow newrow = dtTableOperationsTransfert.NewRow();
+			newrow["strNomCompte"] = strCompteDest;
+			newrow["nKey"] = 0;
+			newrow["strOperation"] = strOperation;
+			newrow["strModePaiement"] = Global.arListItem[5].ToString();
+			newrow["dblCredit"] = dblMontant;
+			newrow["dblDebit"] = 0;
+			newrow["dtDate"] = DateTime.Now;
+			dtTableOperationsTransfert.Rows.Add(newrow);
+		}
+
+        public void EnregistreOperationsTransfert
+		(
+			ref string strMsg
+		)
         {
 			XmlTextWriter XMLWriter = null;
-			string strPathFichier = Path.Combine(Global.DossierFichiers, strCompteDest + ".xml");
-			try
+			string strCompteDest = string.Empty;
+			string strPathFichier = string.Empty;
+			
+			// pour chaque compte
+			foreach (DataRow row in dtTableOperationsTransfert.Select("1=1", "strNomCompte ASC"))
 			{
-				XElement xmlElt = XElement.Load(strPathFichier);
-				// ajout donnée dans le fichier
-				XElement newElt = new XElement("Opération",
-								new XElement("ModePaiement", Global.arListItem[5].ToString()),
-								new XElement("Date", DateTime.Now.ToShortDateString()),
-								new XElement("Libellé", strOperation),
-								new XElement("Crédit", dblMontant.ToString()),
-								new XElement("Débit", "0"));
-				xmlElt.Element("Opérations").Add(newElt);
-				xmlElt.Save(strPathFichier);
-			}
-			catch (Exception ex)
-			{
-				strMsg += ex.Message;
-			}
-			finally
-			{
-				if (XMLWriter != null)
-					XMLWriter.Close();
+				if (strCompteDest != row["strNomCompte"].ToString())
+				{
+					strCompteDest = row["strNomCompte"].ToString();
+					strPathFichier = Path.Combine(Global.DossierFichiers, strCompteDest + ".xml");
+					//
+					try
+					{
+						XElement xmlElt = XElement.Load(strPathFichier);
+						// ajout données dans le fichier
+						foreach (DataRow row2 in dtTableOperationsTransfert.Select("strNomCompte='" + strCompteDest + "'"))
+						{
+							XElement newElt = new XElement("Opération",
+											new XElement("ModePaiement", row2["strModePaiement"].ToString()),
+											new XElement("Date", Convert.ToDateTime(row2["dtDate"]).ToShortDateString()),
+											new XElement("Libellé", row2["strOperation"].ToString()),
+											new XElement("Crédit", row2["dblCredit"].ToString()),
+											new XElement("Débit", row2["dblDebit"].ToString()));
+							xmlElt.Element("Opérations").Add(newElt);
+							xmlElt.Save(strPathFichier);
+						}
+					}
+					catch (Exception ex)
+					{
+						strMsg += ex.Message;
+					}
+					finally
+					{
+						if (XMLWriter != null)
+							XMLWriter.Close();
+					}
+				}
 			}
         }
     }
