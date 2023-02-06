@@ -180,7 +180,7 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ## Notes de version
 
-- **2.0.0206.0**
+- **2.0.0206.1**
   - Ajout alertes sur les opérations à venir.
   - Les données et la config utilisateur ne sont plus stockées dans le dossier de l'application mais dans le dossier utilisateur afin de faciliter l'installation des nouvelles versions.
 - **1.4.0203.1**
@@ -208,8 +208,8 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ### Dernière version
 
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v2.0.0206.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.0_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0206.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.0_avec_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v2.0.0206.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.1_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0206.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.1_avec_runtime.tar.xz)
 
 ### Ancienne version
 
@@ -234,7 +234,7 @@ Si vous avez des données créées avec la version 1.x de l'application, procéd
 - lancer une première fois l'application v2.x puis la refermer sans créer de compte.
   Un dossier caché _.rafcompta_ a été créé dans le dossier utilisateur.
 - copier dans _.rafcompta_ tout le contenu du dossier _Fichiers_ présent dans le dossier de la v1.x.
-- si vous n'aviez pas créé d'opérations récurrentes, c'est terminé.
+- si vous n'aviez pas créé d'opérations récurrentes, c'est terminé.</BR>
 **Si vous aviez créé des opérations récurrentes:**
 - lancer l'application, sélectionner un compte différent puis refermer l'application.
 - un fichier _app.config_ a été créé dans _.rafcompta_. Ouvrir ce fichier avec un éditeur de texte.

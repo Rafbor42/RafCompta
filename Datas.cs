@@ -1043,8 +1043,9 @@ namespace RafCompta
 		// Retourne vrai si la date de l'opération est déjà passée
         public bool IsDateOperationRevolue(TreeIter iter)
         {
-			bool bRevolue = false;
+			bool bRevolue = true;
 			int nDay, nEcart;
+			Int16 nKeyRecur;
 
 			Int16 nKey = Convert.ToInt16(lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
 			foreach(DataRow row in dtTableOperations.Select("nKey=" + nKey))
@@ -1052,11 +1053,18 @@ namespace RafCompta
 				if (row.RowState == DataRowState.Deleted)
 					continue;
 				//
-				// si au moins 1 jour entre jour prévu et jour courant
-				nDay = Convert.ToDateTime(row["dtDate"]).Day;
-				nEcart = nDay - DateTime.Now.Day;
-				if (nEcart < 0)
-					bRevolue = true;
+				// nKeyRecur > 0 seulement pour les opérations récurrentes
+				nKeyRecur = Convert.ToInt16(row["nKeyRecur"]);
+				if (nKeyRecur > 0)
+				{
+					// si au moins 1 jour entre jour prévu et jour courant
+					nDay = Convert.ToDateTime(row["dtDate"]).Day;
+					nEcart = nDay - DateTime.Now.Day;
+					if (nEcart < 0)
+						bRevolue = true;
+					else
+						bRevolue = false;
+				}
 			}
             return bRevolue;
         }
