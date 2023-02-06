@@ -5,8 +5,10 @@
   - [Principe de fonctionnement](#principe-de-fonctionnement)
     - [Créer un compte](#créer-un-compte)
     - [Saisir des opérations](#saisir-des-opérations)
-    - [Effectuer le rapprochement bancaire](#effectuer-le-rapprochement-bancaire)
+    - [Modifier ou supprimer des opérations](#modifier-ou-supprimer-des-opérations)
     - [Opérations récurrentes](#opérations-récurrentes)
+    - [Gestion des opérations à venir](#gestion-des-opérations-à-venir)
+    - [Effectuer le rapprochement bancaire](#effectuer-le-rapprochement-bancaire)
     - [Transfert entre comptes](#transfert-entre-comptes)
   - [Paramètres du compte actif](#paramètres-du-compte-actif)
   - [Consulter les archives](#consulter-les-archives)
@@ -16,6 +18,7 @@
     - [Dernière version](#dernière-version)
     - [Ancienne version](#ancienne-version)
     - [Installation sur Linux](#installation-sur-linux)
+      - [Migration v1.x vers v2.x](#migration-v1x-vers-v2x)
 
 ![Mainwin](images/markdown/mainwin.png)
 
@@ -26,7 +29,7 @@ Dès que les opérations apparaissent sur le compte, il suffit d'effectuer le ra
 
 Elle est composée de 2 onglets: _Opérations, Paramètres_.
 Les données sont stockées dans des fichiers au format _xml_.
-Les fichiers sont stockés dans le sous-dossier _Fichiers_, situé dans le dossier de l’application.
+Les fichiers sont stockés dans le dossier utilisateur, dans un dossier caché _.rafcompta_.
 
 ## Principe de fonctionnement
 
@@ -52,6 +55,34 @@ Cocher la case _Opération récurrente_ si on veut pouvoir l'ajouter les mois su
 
 ![AjouterOperation](images/markdown/ajouter_operation.png)
 
+### Modifier ou supprimer des opérations
+
+Ces opérations se font ligne par ligne. Sélectionner toute la ligne (la coche n'est pas prise en compte) puis choisir l'action désirée par les menus **Actions** -> **Modifier opération** ou **Actions** -> **Supprimer opération** ou par les boutons équivalents dans la fenêtre principale.
+Pour les opérations récurrentes, la suppression de la coche _Opération récurrente_ n'est plus possible.
+La date n'est pas modifiable non plus afin de ne pas perturber l'algorythme de recherche d'opérations à venir.
+Si nécessaire, supprimer puis recréer les opérations.
+
+### Opérations récurrentes
+
+Par le menu **Actions** -> **Opérations récurrentes** ou par le bouton équivalent dans la fenêtre principale, on accède à la fenêtre de gestion:
+
+![OperationsRecurrentes](images/markdown/operation_recurrente.png)
+
+Cocher les lignes d'opérations à ajouter au compte actif, le bouton _Ajouter au compte_ apparait. La date d'ajout sera fixée au jour indiqué, pour le mois courant.
+On peut supprimer ou modifier une opération en sélectionnant la ligne. La modification comporte les mêmes contraintes que celles décrites au §[Modifier ou supprimer des opérations](#modifier-ou-supprimer-des-opérations)
+
+Chaque opération est identifiée par une clé unique, si l'opération existe déjà dans le compte actif, elle sera ignorée:
+
+![OperecurrenteIgnoree](images/markdown/operecurrente_ignoree.png)
+
+### Gestion des opérations à venir
+
+L'application vérifie si des opérations sont à venir dans les 6 jours qui suivent la date courante. Une alerte s'affiche dans la barre des boutons.
+
+![OperationsAVenir](images/markdown/operation_a_venir.png)
+
+Vous devez insérer les opérations comme décrit au §[Opérations récurrentes](#opérations-récurrentes).
+
 ### Effectuer le rapprochement bancaire
 
 ![Rapprochement](images/markdown/rapprochement.png)
@@ -72,18 +103,10 @@ Si _Archiver les lignes rapprochées_ est coché dans l'onglet _Paramètres_, le
 Les fichiers déjà créés sont mis à jour.
 Si parmi les opérations archivées, une au moins n'a pas été effectuée pendant l'année courante, un nouveau fichier d'archives est créé pour l'année concernée.
 
-### Opérations récurrentes
+:warning: les opérations récurrentes ne peuvent pas être rapprochées tant que leur date d'échéance n'est pas révolue, ceci afin de ne pas perturber l'algorythme de recherche d'opérations à venir.
+Le message suivant apparait dans ce cas:
 
-Par le menu **Actions** -> **Opérations récurrentes** ou par le bouton équivalent dans la fenêtre principale, on accède à la fenêtre de gestion:
-
-![OperationsRecurrentes](images/markdown/operation_recurrente.png)
-
-Cocher les lignes d'opérations à ajouter au compte actif, le bouton _Ajouter au compte_ apparait. La date d'ajout sera fixée au jour indiqué, pour le mois courant.
-On peut supprimer ou modifier une opération en sélectionnant la ligne.
-
-Chaque opération est identifiée par une clé unique, si l'opération existe déjà dans le compte actif, elle sera ignorée:
-
-![OperecurrenteIgnoree](images/markdown/operecurrente_ignoree.png)
+![Rapprochement_impossible](images/markdown/rapprochement_impossible.png)
 
 ### Transfert entre comptes
 
@@ -102,22 +125,22 @@ On peut modifier à tout moment le solde initial du compte.
 
 Les paramètres globaux concernent l'application:
 
-- _Charger le fichier après sélection du compte_: toujours coché.
-Le fichier de compte se charge automatiquement lorsqu'on sélectionne un compte dans la liste déroulante _Compte_.
-- _Sauvegarder le fichier de comptes à la fermeture_: si coché, les fichiers sont sauvegardés automatiquement à la fermeture de l'application.
+- _Charger les fichiers après sélection du compte_: toujours coché.
+Les fichiers de comptes sont chargés automatiquement lorsqu'on sélectionne un compte dans la liste déroulante _Compte_.
+- _Enregistrer les fichiers à la fermeture_: si coché, les fichiers sont sauvegardés automatiquement à la fermeture de l'application.
 - _Archiver les lignes rapprochées_: si coché, les lignes sont archivées lors du rapprochement bancaire.
 
-Certains de ces paramètres sont prédéfinis dans le fichier de configuration de l'application _app.config_. Ils sont mis à jour à la fermeture de l'application. Le nom par défaut du fichier de données des comptes _ListeComptes.xml_ n'est pas modifiable dans l'application, mais directement dans le fichier de configuration.
+Certains de ces paramètres sont prédéfinis dans le fichier de configuration de l'application _app.config_ qui est stocké dans le dossier caché _.rafcompta_ du dossier utilisateur. Ils sont mis à jour à la fermeture de l'application. Le nom par défaut du fichier de données des comptes _ListeComptes.xml_ n'est pas modifiable dans l'application, mais directement dans le fichier de configuration.
 Idem pour la clé des opérations récurrentes _KeyOpeRecur_  et le nom du dernier compte utilisé _DernierCompteActif_ qui sont gérés par l'application et **ne doivent pas être modifiés**.
 
 ```text
-<appSettings>
-<add key="FichierDonneesComptes" value="ListeComptes.xml" />
-<add key="SauveFichierAuto" value="true" />
-<add key="ArchiveLigneRappro" value="true" />
-<add key="KeyOpeRecur" value="0" />
-<add key="DernierCompteActif" value="" />
-</appSettings>
+<userSettings>
+  <FichierDonneesComptes value="ListeComptes.xml" />
+  <SauveFichierAuto value="True" />
+  <ArchiveLigneRappro value="True" />
+  <KeyOpeRecur value="0" />
+  <DernierCompteActif value="CréditMutuel" />
+</userSettings>
 ```
 
 ## Consulter les archives
@@ -151,13 +174,15 @@ Windows: ```dotnet publish -c Release -r win-x64 --self-contained false```</br>
 Pour déployer l'application en dehors de _Visual Studio Code_:
 
 - récupérer le dossier _publish_ (situé dans le dossier _/bin/Release/net6.0/_ du projet) et le renommer en _RafCompta_ (ou autre nom à votre convenance).
-- facultatif: copier le dossier _Fichiers_ contenant des exemples de comptes, dans le dossier _RafCompta_.
 - après copie du dossier _RafCompta_ sur le support de destination, donner les droits d'exécution au fichier _RafCompta_.
 - créer un lanceur comprenant en exécutable le fichier _RafCompta_.
 - l'icône de l'application (_comptabilite.png_) est disponible dans le dossier _images_.
 
 ## Notes de version
 
+- **2.0.0206.0**
+  - Ajout alertes sur les opérations à venir.
+  - Les données et la config utilisateur ne sont plus stockées dans le dossier de l'application mais dans le dossier utilisateur afin de faciliter l'installation des nouvelles versions.
 - **1.4.0203.1**
   - Suppression des demandes d'enregistrement lors du changement de compte ou de la consultation des archives, si la sauvegarde auto est activée.
   - Les opérations de transfert ne sont plus enregistrées directement dans le compte destinataire mais stockées dans un DataTable.
@@ -183,13 +208,13 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ### Dernière version
 
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_avec_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v2.0.0206.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.0_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0206.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.0_avec_runtime.tar.xz)
 
 ### Ancienne version
 
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0130.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0130.0_avec_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_sans_runtime.tar.xz)
+- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_avec_runtime.tar.xz)
 
 ### Installation sur Linux
 
@@ -200,3 +225,24 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
  ```./RafCompta```
 
 Installation du Runtime .NET 6: voir [Installer .NET sur Linux](https://learn.microsoft.com/fr-fr/dotnet/core/install/linux)
+
+#### Migration v1.x vers v2.x
+
+Si vous avez des données créées avec la version 1.x de l'application, procéder ainsi:
+
+- décompresser l'archive de la v2.x sans écraser l'ancienne version v1.x.
+- lancer une première fois l'application v2.x puis la refermer sans créer de compte.
+  Un dossier caché _.rafcompta_ a été créé dans le dossier utilisateur.
+- copier dans _.rafcompta_ tout le contenu du dossier _Fichiers_ présent dans le dossier de la v1.x.
+- si vous n'aviez pas créé d'opérations récurrentes, c'est terminé.
+**Si vous aviez créé des opérations récurrentes:**
+- lancer l'application, sélectionner un compte différent puis refermer l'application.
+- un fichier _app.config_ a été créé dans _.rafcompta_. Ouvrir ce fichier avec un éditeur de texte.
+- allez dans le dossier de la v1.x, ouvrir dans un éditeur de texte le fichier _RafCompta.dll.config_
+- rechercher la clé "KeyOpeRecur" et noter la valeur associée.
+- reporter cette valeur pour la même clé dans le fichier _app.config_ puis enregistrer le fichier.
+  ex.: si vous aviez créé 6 opérations récurrentes, la ligne doit être ainsi:
+
+  ```text
+  <KeyOpeRecur value="6" />
+  ```

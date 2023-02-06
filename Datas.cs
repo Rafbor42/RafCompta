@@ -682,7 +682,7 @@ namespace RafCompta
 			bRecurrente = false;
 			Int16 nKeyRecur = 0;
 			bool bCreerOpeRecur = false;
-			OperBox = new OperationBox(pParentWindow, "Nouvelle opération", true);
+			OperBox = new OperationBox(pParentWindow, "Nouvelle opération", true, true);
 			OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
 			if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
 			{
@@ -714,7 +714,7 @@ namespace RafCompta
 				dtmDate = Convert.ToDateTime(row["dtDate"]);
 				bRecurrente = Convert.ToBoolean(row["bRecurrente"]);
 				//
-				OperBox = new OperationBox(pParentWindow, "Modifier opération", false);
+				OperBox = new OperationBox(pParentWindow, "Modifier opération", false, false);
 				OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
 				if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
 				{
@@ -887,7 +887,7 @@ namespace RafCompta
 				dtmDate = Convert.ToDateTime(row["dtDate"]);
 				bRecurrente = true;
 				//
-				OperBox = new OperationBox(pParentWindow, "Modifier opération", false);
+				OperBox = new OperationBox(pParentWindow, "Modifier opération", false, false);
 				OperBox.Destroyed += delegate { OnOperBoxDestroyed(ref strOperation, ref strModePaiement, ref dblCredit, ref dblDebit, ref dtmDate, ref bRecurrente); };
 				if (OperBox.ShowD(strOperation, strModePaiement, dblCredit, dblDebit, dtmDate, bRecurrente) == ResponseType.Ok)
 				{
@@ -1000,6 +1000,65 @@ namespace RafCompta
 					}
 				}
 			}
+        }
+
+        public short GetNbOperationsAVenir()
+        {
+			Int16 nNbOper = 0;
+			bool bExiste;
+			int nDay, nEcart;
+
+			foreach(DataRow row in dtTableOperationsRecur.Select("strNomCompte='" + Global.NomCompteCourant + "'"))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				bExiste = false;
+				foreach (DataRow row2 in dtTableOperations.Rows)
+				{
+					if (row2.RowState == DataRowState.Deleted)
+						continue;
+					//
+					if (Convert.ToInt16(row2["nKeyRecur"]) == Convert.ToInt16(row["nKey"]))
+					{
+						bExiste = true;
+						break;
+					}
+				}
+				// opération non présente
+				if (bExiste == false)
+				{
+					// si moins de 7 jours d'écart entre le jour prévu et le jour courant
+					nDay = Convert.ToDateTime(row["dtDate"]).Day;
+					nEcart = nDay - DateTime.Now.Day;
+					if (nEcart >= 0 && nEcart < 7)
+					{
+						nNbOper++;
+					}
+				}
+			}
+			return nNbOper;
+        }
+
+		// Retourne vrai si la date de l'opération est déjà passée
+        public bool IsDateOperationRevolue(TreeIter iter)
+        {
+			bool bRevolue = false;
+			int nDay, nEcart;
+
+			Int16 nKey = Convert.ToInt16(lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
+			foreach(DataRow row in dtTableOperations.Select("nKey=" + nKey))
+			{
+				if (row.RowState == DataRowState.Deleted)
+					continue;
+				//
+				// si au moins 1 jour entre jour prévu et jour courant
+				nDay = Convert.ToDateTime(row["dtDate"]).Day;
+				nEcart = nDay - DateTime.Now.Day;
+				if (nEcart < 0)
+					bRevolue = true;
+			}
+            return bRevolue;
         }
     }
 }

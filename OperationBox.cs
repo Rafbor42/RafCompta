@@ -71,6 +71,7 @@ namespace RafCompta
         public ResponseType rResponse;
         private bool bRecurrente;
         private bool bOpeRecurMod;
+        private bool bDateRecurMod;
         private Int16 nKeyRecur;
         private CalendarBox datePicker;
         private Window pParentWindow=null;
@@ -89,8 +90,9 @@ namespace RafCompta
         public bool Recurrente { get => bRecurrente; set => bRecurrente = value; }
         public Int16 KeyRecur { get => nKeyRecur; set => nKeyRecur = value; }
         public bool OpeRecurMod { get => bOpeRecurMod; set => bOpeRecurMod = value; }
+        public bool DateRecurMod { get => bDateRecurMod; set => bDateRecurMod = value; }
 
-        public OperationBox(Window ParentWindow, string strTitre, bool bOpeRecurMod) : this(new Builder("OperationBox.glade"))
+        public OperationBox(Window ParentWindow, string strTitre, bool bOpeRecurMod, bool bDateRecurMod) : this(new Builder("OperationBox.glade"))
         {
             pParentWindow = ParentWindow;
             this.TransientFor = pParentWindow;
@@ -98,6 +100,7 @@ namespace RafCompta
             this.Modal = true;
             this.Title = strTitre;
             OpeRecurMod = bOpeRecurMod;
+            DateRecurMod = bDateRecurMod;
         }
 
         private OperationBox(Builder builder) : base(builder.GetRawOwnedObject("OperationBox"))
@@ -190,6 +193,9 @@ namespace RafCompta
             txtDebit.Text = dblDebit.ToString();
             chkRecurrente.Active = bRecurrente;
             chkRecurrente.Sensitive = OpeRecurMod;
+            // modif date impossible
+            txtDate.Sensitive = DateRecurMod;
+            btnCalendar.Sensitive = DateRecurMod;
             for (int i = 0; i < Global.arListItem.Count; i++)
             {
                 if (Global.arListItem[i].Equals(strModePaiement))

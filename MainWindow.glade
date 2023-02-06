@@ -37,6 +37,11 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-convert</property>
   </object>
+  <object class="GtkImage" id="image16">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-refresh</property>
+  </object>
   <object class="GtkImage" id="image17">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -278,6 +283,17 @@
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuPointVerifierMaj">
+                        <property name="label" translatable="yes">Vérifier mises à jour</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Recherche si une mise à jour est disponible</property>
+                        <property name="image">image16</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -358,7 +374,7 @@
                 <property name="always-show-image">True</property>
               </object>
               <packing>
-                <property name="x">76</property>
+                <property name="x">114</property>
               </packing>
             </child>
             <child>
@@ -373,7 +389,20 @@
                 <property name="always-show-image">True</property>
               </object>
               <packing>
-                <property name="x">114</property>
+                <property name="x">76</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="txtOperationsAVenir">
+                <property name="width-request">347</property>
+                <property name="height-request">34</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="editable">False</property>
+                <property name="has-frame">False</property>
+              </object>
+              <packing>
+                <property name="x">187</property>
               </packing>
             </child>
           </object>
@@ -423,7 +452,7 @@
                 <property name="can-focus">False</property>
                 <child>
                   <object class="GtkCheckButton" id="chkChargerFichierAuto">
-                    <property name="label" translatable="yes">Charger le fichier après sélection du compte</property>
+                    <property name="label" translatable="yes">Charger les fichiers après sélection du compte</property>
                     <property name="width-request">321</property>
                     <property name="height-request">34</property>
                     <property name="visible">True</property>
@@ -560,7 +589,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="chkSauverFichierAuto">
-                    <property name="label" translatable="yes">Enregistrer le fichier de comptes à la fermeture</property>
+                    <property name="label" translatable="yes">Enregistrer les fichiers à la fermeture</property>
                     <property name="width-request">352</property>
                     <property name="height-request">34</property>
                     <property name="visible">True</property>

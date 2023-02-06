@@ -36,8 +36,10 @@ using System;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 using System.Threading;
-using System.Globalization;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Net;
 
 namespace RafCompta
 {
@@ -64,6 +66,7 @@ namespace RafCompta
         [UI] private MenuItem mnuActionTransfert = null;
         [UI] private MenuItem mnuPointAPropos = null;
         [UI] private MenuItem mnuPointAide = null;
+        [UI] private MenuItem mnuPointVerifierMaj = null;
         //
         [UI] private ComboBoxText cbListeComptes = null;
         [UI] private TreeView trvOperations = null;
@@ -73,6 +76,7 @@ namespace RafCompta
         [UI] private Entry txtInfo = null;
         [UI] private Entry txtCredits = null;
         [UI] private Entry txtDebits = null;
+        [UI] private Entry txtOperationsAVenir = null;
         [UI] private Button btnAjouter = null;
         [UI] private Button btnSupprimer = null;
         [UI] private Button btnModifier = null;
@@ -148,6 +152,7 @@ namespace RafCompta
             mnuActionTransfert.Activated += OnMnuActionTransfert;
             mnuPointAPropos.Activated += OnMnuPointAPropos;
             mnuPointAide.Activated += OnMnuPointAide;
+            mnuPointVerifierMaj.Activated += OnMnuPointVerifierMaj;
             // events combobox
             cbListeComptes.Changed += OnCbListeComptesChanged;
             // events textbox
@@ -160,7 +165,6 @@ namespace RafCompta
             btnSupprimer.Clicked += OnBtnSupprimerOperationClicked;
             btnModifier.Clicked += OnBtnModifierOperationClicked;
             btnRapprocher.Clicked += OnBtnRapprocherClick;
-            // btnOuvrir.Clicked += OnBtnOuvrirClicked;
             btnEnregistrer.Clicked += OnBtnEnregistrerClicked;
             btnConsulterArchives.Clicked += OnBtnConsulterArchivesClicked;
             chkSauverFichierAuto.Clicked += OnChkSauverFichierAutoClicked;
@@ -176,6 +180,7 @@ namespace RafCompta
             txtNomCompte.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtNomFichierArchives.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             txtNomFichierCompte.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
+            txtOperationsAVenir.ModifyBg(StateType.Normal, new Gdk.Color(220,220,220));
             chkChargerFichierAuto.Sensitive = false;
             lblEcart.Visible = false;
             txtEcart.Visible = false;
@@ -184,6 +189,9 @@ namespace RafCompta
             lblDebits.Visible = false;
             txtDebits.Visible = false;
             btnRapprocher.Visible = false;
+            txtOperationsAVenir.Visible = false;
+            // temporaire
+            mnuPointVerifierMaj.Visible = false;
             //
             Global.LireConfigLocal(ref strMsg);
 			if (strMsg != string.Empty)
@@ -225,6 +233,11 @@ namespace RafCompta
             }
         }
 
+        private void OnMnuPointVerifierMaj(object sender, EventArgs e)
+        {
+            // TODO
+        }
+        
         private void OnBtnTransfertClicked(object sender, EventArgs e)
         {
             OnMnuActionTransfert(sender, e);
@@ -237,13 +250,11 @@ namespace RafCompta
 
         private void OnChkArchiverLigneRapproClicked(object sender, EventArgs e)
         {
-            Global.ConfigModified = true;
             Global.ArchiveLigneRappro = chkArchiverLigneRappro.Active;
         }
 
         private void OnChkSauverFichierAutoClicked(object sender, EventArgs e)
         {
-            Global.ConfigModified = true;
             Global.SauveFichierAuto = chkSauverFichierAuto.Active;
         }
 
@@ -256,15 +267,16 @@ namespace RafCompta
 			}
             txtInfo.Text = string.Empty;
 			OpeRecurrenteBox OpeRecurBox = new OpeRecurrenteBox(this, ref datas);
-            OpeRecurBox.Destroyed += delegate { OnOperBoxDestroyed(); };
+            OpeRecurBox.Destroyed += delegate { OnOperRecurBoxDestroyed(); };
             OpeRecurBox.Show();
         }
 
-        private void OnOperBoxDestroyed()
+        private void OnOperRecurBoxDestroyed()
         {
             datas.DoFiltreDataTable();
 			UpdateTrvOperations();
 			DoCalcul();
+            RechercheOperationsAVenir();
         }
 
         private void OnBtnConsulterArchivesClicked(object sender, EventArgs e)
@@ -454,14 +466,26 @@ namespace RafCompta
 			
             TreeIter iter;
             Int16 nLignes = 0;
-            // on compte le nombre de lignes cochées
+            string strMessage;
+            // on compte le nombre de lignes cochées et on vérifie si il y a des opérations récurrentes non supprimables
             if (datas.lstoreOperations.GetIterFirst(out iter) == true)
             {
                 do
                 {
                     // si coché
                     if (Convert.ToBoolean(datas.lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Select))) == true)
+                    {
                         nLignes++;
+                        // rapprochement possible seulement après la date prévue pour les opérations récurrentes, sinon
+                        // l'alerte reviendrait même après leur rapprochement
+                        if (datas.IsDateOperationRevolue(iter) == false)
+                        {
+                            strMessage = "Une ou plusieurs opérations récurrentes n'ont pas atteint leur date de prélèvement.\n";
+                            strMessage += "Vous pourrez les supprimer seulement après cette date.";
+                            Global.ShowMessage("Rapprochement impossible:", strMessage, this);
+                            return;
+                        }
+                    }
                 }
                 while (datas.lstoreOperations.IterNext(ref iter) == true);
             }
@@ -486,6 +510,7 @@ namespace RafCompta
 			UpdateData(true);
 			UpdateTrvOperations();
 			DoCalcul(false);
+            RechercheOperationsAVenir();
 		}
 
         // Menu 'Actions>Ajouter un compte'.
@@ -682,10 +707,32 @@ namespace RafCompta
                 Global.DernierCompteActif = strItem;
                 this.Title = "RafCompta - " + strItem;
                 Global.ConfigModified = true;
+                Global.SoldeBanque = 0;
 				UpdateData(true);
 				OuvrirFichier();
 				DoCalcul(false);
+                RechercheOperationsAVenir();
 			}
+        }
+
+        private void RechercheOperationsAVenir()
+        {
+            Int16 nNbOper;
+            string strMessage, strPluriel = string.Empty;
+
+            if ((nNbOper = datas.GetNbOperationsAVenir()) > 0)
+            {
+                if (nNbOper > 1)
+                    strPluriel += "s";
+                strMessage = string.Format("{0} opération{1} à venir dans les 6 jours", nNbOper, strPluriel);
+                Global.AfficheInfo(txtOperationsAVenir, strMessage, new Gdk.Color(255,0,0));
+                txtOperationsAVenir.Visible = true;
+            }
+            else
+            {
+                txtOperationsAVenir.Text = string.Empty;
+                txtOperationsAVenir.Visible = false;
+            }
         }
 
         private void OnMnuFichierQuitter(object sender, EventArgs a)
@@ -946,6 +993,7 @@ namespace RafCompta
                 datas.SupprimeOperationNR(iter);
                 UpdateTrvOperations();
                 DoCalcul();
+                RechercheOperationsAVenir();
             }
         }
 

@@ -106,6 +106,7 @@ namespace RafCompta
             }
 			Global.ShowMessage("Ajout d'opérations sur compte actif:", nLignesAjoutees + " ajoutée(s)\n" + nLignesIgnorees + " ignorée(s) car déjà existante(s)", this, MessageType.Info);
 			UpdateTrvOperations();
+            this.Dispose();
         }
         
         private void OnBtnModifierClicked(object sender, EventArgs e)

@@ -33,6 +33,7 @@
     along with RafCompta.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using System.Collections;
 using System.Threading;
 using System.Xml;
@@ -72,6 +73,7 @@ namespace RafCompta
         private static string strDossierFichiers;
 		private static Int16 nKeyOpeRecur;
 		private static string strDernierCompteActif;
+		private static string strFichierConfigLocal;
 		//
 		public static string FichierDonneesComptes { get => strFichierDonneesComptes; set => strFichierDonneesComptes = value; }
 		public static bool ConfigModified {	get => bConfigModified; set => bConfigModified = value; }
@@ -86,6 +88,7 @@ namespace RafCompta
         public static bool FichierCompteNonTrouve { get => bFichierCompteNonTrouve; set => bFichierCompteNonTrouve = value; }
         public static short KeyOpeRecur { get => nKeyOpeRecur; set => nKeyOpeRecur = value; }
         public static string DernierCompteActif { get => strDernierCompteActif; set => strDernierCompteActif = value; }
+		public static string FichierConfigLocal { get => strFichierConfigLocal; set => strFichierConfigLocal = value; }
 
         public enum eTrvOperationsCols
 		{
@@ -128,10 +131,12 @@ namespace RafCompta
 			//
 			FichierDonneesComptes = "ListeComptes.xml";
 			NomCompteCourant = string.Empty;
+			FichierConfigLocal = "app.config";
 			//
 			AppStartupPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-			DossierFichiers = AppStartupPath + Path.DirectorySeparatorChar + "Fichiers";
-			// création du dossier Fichiers, si pas présent
+			//DossierFichiers = AppStartupPath + Path.DirectorySeparatorChar + "Fichiers";
+			DossierFichiers = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".rafcompta");
+			// création de DossierFichiers, si pas présent
 			if (!Directory.Exists(DossierFichiers))
 				Directory.CreateDirectory(DossierFichiers);
 			//
@@ -185,25 +190,52 @@ namespace RafCompta
 		}
 
 		/// <summary>
-		/// Récupère les paramètres de l'application dans le fichier de configuration.
+		/// Récupère les paramètres utilisateur dans le fichier de configuration.
 		/// </summary>
 		public static void LireConfigLocal(ref string strMsg)
 		{
+			XmlTextReader reader = null;
         	try
         	{
-        		if (ConfigurationManager.AppSettings["FichierDonneesComptes"] != String.Empty)
-					FichierDonneesComptes = ConfigurationManager.AppSettings["FichierDonneesComptes"];
-
-        		SauveFichierAuto = Convert.ToBoolean(ConfigurationManager.AppSettings["SauveFichierAuto"]);
-    	   		ArchiveLigneRappro = Convert.ToBoolean(ConfigurationManager.AppSettings["ArchiveLigneRappro"]);
-				KeyOpeRecur = Convert.ToInt16(ConfigurationManager.AppSettings["KeyOpeRecur"]);
-
-				if (ConfigurationManager.AppSettings["DernierCompteActif"] != String.Empty)
-					DernierCompteActif = ConfigurationManager.AppSettings["DernierCompteActif"];
+				// config au niveau utilisateur
+				reader = new XmlTextReader(Path.Combine(DossierFichiers, FichierConfigLocal));
+				while (reader.Read())
+				{
+					if (reader.IsStartElement())
+					{
+						switch (reader.Name)
+						{
+							case "FichierDonneesComptes":
+								FichierDonneesComptes = reader.GetAttribute("value");
+								break;
+							case "SauveFichierAuto":
+								SauveFichierAuto = Convert.ToBoolean(reader.GetAttribute("value"));
+								break;
+							case "ArchiveLigneRappro":
+								ArchiveLigneRappro = Convert.ToBoolean(reader.GetAttribute("value"));
+								break;
+							case "KeyOpeRecur":
+								KeyOpeRecur = Convert.ToInt16(reader.GetAttribute("value"));
+								break;
+							case "DernierCompteActif":
+								DernierCompteActif = reader.GetAttribute("value");
+								break;
+						}
+					}
+				}
         	}
+			catch (FileNotFoundException)
+			{
+				// le fichier sera créé par l'application
+			}
         	catch (Exception ex)
 			{
-				strMsg += ex.Message + "\r\n";
+				strMsg += ex.Message + Environment.NewLine;
+			}
+			finally
+			{
+				if (reader != null)
+					reader.Close();
 			}
 		}
 		
@@ -224,48 +256,50 @@ namespace RafCompta
 		}
 		
 		/// <summary>
-		/// Ecriture des paramètres dans le fichier de configuration.
+		/// Ecriture des paramètres utilisateur dans le fichier de configuration.
 		/// </summary>
 		public static void EcrireConfigLocal(ref string strMsg)
 		{
+			XmlTextWriter writer = null;
 			try
 			{
-				XmlElement element;
-	        	XmlDocument xmlDoc = new XmlDocument();
-				var conf = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
- 				xmlDoc.Load(conf.FilePath);
-				
-				//foreach (XmlElement element in xmlDoc.DocumentElement)
-				for (int i = 0; i < xmlDoc.DocumentElement.ChildNodes.Count; i++)
-				{
-					element = (XmlElement)xmlDoc.DocumentElement.ChildNodes[i];
-				    if (element.Name.Equals("appSettings"))
-				    {
-				    	foreach (XmlNode node in element.ChildNodes)
-				        {
-				            if (node.Attributes[0].Value.Equals("FichierDonneesComptes"))
-				            	node.Attributes[1].Value = FichierDonneesComptes;
-				            //
-				            if (node.Attributes[0].Value.Equals("SauveFichierAuto"))
-				            	node.Attributes[1].Value = SauveFichierAuto.ToString();
-				            //
-				            if (node.Attributes[0].Value.Equals("ArchiveLigneRappro"))
-				            	node.Attributes[1].Value = ArchiveLigneRappro.ToString();
-							//
-				            if (node.Attributes[0].Value.Equals("KeyOpeRecur"))
-				            	node.Attributes[1].Value = KeyOpeRecur.ToString();
-							//
-							if (node.Attributes[0].Value.Equals("DernierCompteActif"))
-				            	node.Attributes[1].Value = DernierCompteActif;
-				    	}
-				    }
-				}
-				xmlDoc.Save(conf.FilePath);
-				ConfigurationManager.RefreshSection("appSettings");
+				writer = new XmlTextWriter(Path.Combine(DossierFichiers, FichierConfigLocal), Encoding.UTF8);
+				writer.Formatting = Formatting.Indented;
+
+				writer.WriteStartDocument(true);
+				writer.WriteStartElement("configuration");
+					writer.WriteStartElement("userSettings");
+						writer.WriteStartElement("FichierDonneesComptes");
+						writer.WriteAttributeString("value", FichierDonneesComptes);
+						writer.WriteEndElement();
+
+						writer.WriteStartElement("SauveFichierAuto");
+						writer.WriteAttributeString("value", SauveFichierAuto.ToString());
+						writer.WriteEndElement();
+
+						writer.WriteStartElement("ArchiveLigneRappro");
+						writer.WriteAttributeString("value", ArchiveLigneRappro.ToString());
+						writer.WriteEndElement();
+
+						writer.WriteStartElement("KeyOpeRecur");
+						writer.WriteAttributeString("value", KeyOpeRecur.ToString());
+						writer.WriteEndElement();
+
+						writer.WriteStartElement("DernierCompteActif");
+						writer.WriteAttributeString("value", DernierCompteActif);
+						writer.WriteEndElement();
+					writer.WriteEndElement();
+				writer.WriteEndElement();
+				writer.WriteEndDocument();
 			}
 			catch (Exception ex)
 			{
-				strMsg += ex.Message + "\r\n";
+				strMsg += ex.Message + Environment.NewLine;
+			}
+			finally
+			{
+				if (writer != null)
+					writer.Close();
 			}
 		}
 		

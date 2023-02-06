@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyVersion>1.4.0203.1</AssemblyVersion>
-    <FileVersion>1.4.0203.1</FileVersion>
+    <AssemblyVersion>2.0.0206.0</AssemblyVersion>
+    <FileVersion>2.0.0206.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="**\*.glade"/>
