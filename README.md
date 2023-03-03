@@ -1,5 +1,3 @@
-# RafCompta
-
 - [RafCompta](#rafcompta)
   - [Présentation](#présentation)
   - [Principe de fonctionnement](#principe-de-fonctionnement)
@@ -15,10 +13,9 @@
   - [Développement et installation](#développement-et-installation)
   - [Notes de version](#notes-de-version)
   - [Téléchargements](#téléchargements)
-    - [Dernière version](#dernière-version)
-    - [Ancienne version](#ancienne-version)
     - [Installation sur Linux](#installation-sur-linux)
-      - [Migration v1.x vers v2.x](#migration-v1x-vers-v2x)
+
+# RafCompta
 
 ![Mainwin](images/markdown/mainwin.png)
 
@@ -180,6 +177,9 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ## Notes de version
 
+- **2.0.0303.0**
+  - Bugfix lors du rapprochement d'opérations récurrentes saisies le mois précédent.
+  - Publication sous forme d'AppImage. 
 - **2.0.0206.1**
   - Ajout alertes sur les opérations à venir.
   - Les données et la config utilisateur ne sont plus stockées dans le dossier de l'application mais dans le dossier utilisateur afin de faciliter l'installation des nouvelles versions.
@@ -206,43 +206,14 @@ Pour déployer l'application en dehors de _Visual Studio Code_:
 
 ## Téléchargements
 
-### Dernière version
-
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v2.0.0206.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.1_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0206.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0206.1_avec_runtime.tar.xz)
-
-### Ancienne version
-
-- **Linux**: archive _tar.xz_ sans le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_sans_runtime.tar.xz)
-- **Linux**: archive _tar.xz_ incluant le Runtime _.NET 6_: [v1.4.0203.1](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_1.4.0203.1_avec_runtime.tar.xz)
+- **Linux**: 
+  - fichier AppImage: voir [Releases](https://github.com/Rafbor42/RafCompta/releases).
+  - archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0303.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0303.0_avec_runtime.tar.xz)
 
 ### Installation sur Linux
 
-- décompresser l'archive et se positionner dans le dossier.
-- rendre exécutable le fichier _RafCompta_:
- ```chmod +x RafCompta```
-- lancer l'application:
- ```./RafCompta```
-
-Installation du Runtime .NET 6: voir [Installer .NET sur Linux](https://learn.microsoft.com/fr-fr/dotnet/core/install/linux)
-
-#### Migration v1.x vers v2.x
-
-Si vous avez des données créées avec la version 1.x de l'application, procéder ainsi:
-
-- décompresser l'archive de la v2.x sans écraser l'ancienne version v1.x.
-- lancer une première fois l'application v2.x puis la refermer sans créer de compte.
-  Un dossier caché _.rafcompta_ a été créé dans le dossier utilisateur.
-- copier dans _.rafcompta_ tout le contenu du dossier _Fichiers_ présent dans le dossier de la v1.x.
-- si vous n'aviez pas créé d'opérations récurrentes, c'est terminé.</BR>
-**Si vous aviez créé des opérations récurrentes:**
-- lancer l'application, sélectionner un compte différent puis refermer l'application.
-- un fichier _app.config_ a été créé dans _.rafcompta_. Ouvrir ce fichier avec un éditeur de texte.
-- allez dans le dossier de la v1.x, ouvrir dans un éditeur de texte le fichier _RafCompta.dll.config_
-- rechercher la clé "KeyOpeRecur" et noter la valeur associée.
-- reporter cette valeur pour la même clé dans le fichier _app.config_ puis enregistrer le fichier.
-  ex.: si vous aviez créé 6 opérations récurrentes, la ligne doit être ainsi:
-
-  ```text
-  <KeyOpeRecur value="6" />
-  ```
+ - fichier AppImage: consulter cette [documentation](https://doc.ubuntu-fr.org/appimage) pour savoir comment installer des fichiers AppImage.
+ - archive _tar.xz_: 
+    - décompresser l'archive et se positionner dans le dossier.
+    - rendre exécutable le fichier _RafCompta_: ```chmod +x RafCompta```
+    - lancer l'application: ```./RafCompta```

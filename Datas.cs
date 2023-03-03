@@ -1044,7 +1044,7 @@ namespace RafCompta
         public bool IsDateOperationRevolue(TreeIter iter)
         {
 			bool bRevolue = true;
-			int nDay, nEcart;
+			int nDay, nEcart, nMonth;
 			Int16 nKeyRecur;
 
 			Int16 nKey = Convert.ToInt16(lstoreOperations.GetValue(iter, Convert.ToInt16(Global.eTrvOperationsCols.Key)));
@@ -1057,13 +1057,18 @@ namespace RafCompta
 				nKeyRecur = Convert.ToInt16(row["nKeyRecur"]);
 				if (nKeyRecur > 0)
 				{
-					// si au moins 1 jour entre jour prévu et jour courant
-					nDay = Convert.ToDateTime(row["dtDate"]).Day;
-					nEcart = nDay - DateTime.Now.Day;
-					if (nEcart < 0)
-						bRevolue = true;
-					else
-						bRevolue = false;
+					// si on est dans le mois courant
+					nMonth = Convert.ToDateTime(row["dtDate"]).Month;
+					if (nMonth == DateTime.Now.Month)
+					{
+						// si au moins 1 jour entre jour prévu et jour courant
+						nDay = Convert.ToDateTime(row["dtDate"]).Day;
+						nEcart = nDay - DateTime.Now.Day;
+						if (nEcart < 0)
+							bRevolue = true;
+						else
+							bRevolue = false;
+					}
 				}
 			}
             return bRevolue;

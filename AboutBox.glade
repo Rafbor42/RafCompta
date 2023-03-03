@@ -12,10 +12,11 @@
     <property name="copyright" translatable="yes">(c) Raphaël Borrelli (@Rafbor)</property>
     <property name="comments" translatable="yes">Gestion de comptabilité personnelle simplifiée.
 Pour qui veut simplement suivre ses recettes et dépenses journalières, en attendant qu'elles apparaissent sur le compte en banque.</property>
-    <property name="authors">Raphaël Borrelli (@Rafbor)
-    https://github.com/Rafbor42/RafCompta</property>
+    <property name="website">https://github.com/Rafbor42/RafCompta</property>
+    <property name="website-label" translatable="yes">RafCompta sur Github</property>
+    <property name="authors">Raphaël Borrelli (@Rafbor)</property>
     <property name="artists">ddarahttps://www.flaticon.com/fr/auteurs/ddara</property>
-    <property name="logo">comptabilite.png</property>
+    <property name="logo-icon-name"/>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>${APP_ID}</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-2.0+</project_license>
+	<name>${DE_NAME}</name>
+	<summary>Comptabilite personnelle simplifiee</summary>
+	<description>
+		<p>Gestion de comptabilité personnelle simplifiée.
+Pour qui veut simplement suivre ses recettes et dépenses journalières, en attendant qu'elles apparaissent sur le compte en banque.</p>
+	</description>
+	<launchable type="desktop-id">${APP_ID}.desktop</launchable>
+	<url type="homepage">https://github.com/Rafbor42/RafCompta</url>
+	<screenshots>
+		<screenshot type="default">
+			<image>https://raw.githubusercontent.com/Rafbor42/RafCompta/main/images/markdown/rapprochement.png</image>
+		</screenshot>
+	</screenshots>
+	<provides>
+		<id>RafCompta.desktop</id>
+	</provides>
+</component>
