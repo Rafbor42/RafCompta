@@ -40,12 +40,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Net;
+using System.Resources;
+using System.Globalization;
 
 namespace RafCompta
 {
     class MainWindow : Window
     {
         Datas datas;
+        CultureInfo ciCurrentCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+        CultureInfo ciFrancaisCulture = new CultureInfo("fr-FR");
+        CultureInfo ciItalienCulture = new CultureInfo("it-IT");
 
         private AjoutCompteBox ajoutCompteBox;
         private string strNomCompte;
@@ -53,17 +58,21 @@ namespace RafCompta
         private string strMsg = string.Empty;
         //
         // controles
-        // [UI] private MenuItem mnuFichierOuvrir = null;
+        [UI] private MenuItem mnuFichier = null;
         [UI] private MenuItem mnuFichierEnregistrer = null;
         [UI] private MenuItem mnuFichierConsultArchive = null;
         [UI] private MenuItem mnuFichierQuitter = null;
+        [UI] private MenuItem mnuActions = null;
         [UI] private MenuItem mnuActionsAjouterCompte = null;
-        [UI] private MenuItem mnuActionSupprimerCompte = null;
-        [UI] private MenuItem mnuActionAjouterOperation = null;
-        [UI] private MenuItem mnuActionSupprimerOperation = null;
-        [UI] private MenuItem mnuActionModifierOperation = null;
-        [UI] private MenuItem mnuActionOpeRecurrentes = null;
-        [UI] private MenuItem mnuActionTransfert = null;
+        [UI] private MenuItem mnuActionsSupprimerCompte = null;
+        [UI] private MenuItem mnuActionsAjouterOperation = null;
+        [UI] private MenuItem mnuActionsSupprimerOperation = null;
+        [UI] private MenuItem mnuActionsModifierOperation = null;
+        [UI] private MenuItem mnuActionsOpeRecurrentes = null;
+        [UI] private MenuItem mnuActionsTransfert = null;
+        [UI] private MenuItem mnuPointLangue = null;
+        [UI] private CheckMenuItem mnuPointLangueFrançais = null;
+        [UI] private CheckMenuItem mnuPointLangueItalien = null;
         [UI] private MenuItem mnuPointAPropos = null;
         [UI] private MenuItem mnuPointAide = null;
         [UI] private MenuItem mnuPointVerifierMaj = null;
@@ -115,7 +124,7 @@ namespace RafCompta
             else if (Global.FichierCompteNonTrouve == true)
             {
                 // on lance la création d'un compte
-                OnMnuActionsAjouterCompte(new Object(), new EventArgs());
+                OnmnuActionAjouterCompte(new Object(), new EventArgs());
                 // si aucun compte créé
                 if (Global.ListeComptesModified == false)
                     Global.AfficheInfo(txtInfo, "Créez un nouveau compte", new Gdk.Color(0,0,255));
@@ -132,6 +141,17 @@ namespace RafCompta
 			// Thread.CurrentThread.CurrentCulture = ci;
             //
             builder.Autoconnect(this);
+            // controle si présence des fichiers de ressources
+			if (Global.RmS.GetResourceSet(ciItalienCulture, true, false) == null)
+            {
+				Global.EnableItalien = false;
+                mnuPointLangueItalien.Sensitive = false;
+            }
+            if (Global.RmS.GetResourceSet(ciFrancaisCulture, true, false) == null)
+            {
+				Global.EnableFrancais = false;
+                mnuPointLangueFrançais.Sensitive = false;
+            }
             //
             datas = new Datas(this);
             InitTrvOperations();
@@ -139,20 +159,20 @@ namespace RafCompta
             DeleteEvent += delegate { OnMnuFichierQuitter(this, new EventArgs()); };
             //
             // events menus
-            // mnuFichierOuvrir.Activated += OnMnuFichierOuvrir;
             mnuFichierEnregistrer.Activated += OnMnuFichierEnregistrer;
             mnuFichierConsultArchive.Activated += OnMnuFichierConsultArchive;
             mnuFichierQuitter.Activated += OnMnuFichierQuitter;
-            mnuActionsAjouterCompte.Activated += OnMnuActionsAjouterCompte;
-            mnuActionSupprimerCompte.Activated += OnMnuActionsSupprimerCompte;
-            mnuActionAjouterOperation.Activated += OnMnuActionsAjouterOperation;
-            mnuActionModifierOperation.Activated += OnMnuActionsModifierOperation;
-            mnuActionSupprimerOperation.Activated += OnMnuActionsSupprimerOperation;
-            mnuActionOpeRecurrentes.Activated += OnMnuActionsOpRecurrentes;
-            mnuActionTransfert.Activated += OnMnuActionTransfert;
+            mnuActionsAjouterCompte.Activated += OnmnuActionAjouterCompte;
+            mnuActionsSupprimerCompte.Activated += OnMnuActionsSupprimerCompte;
+            mnuActionsAjouterOperation.Activated += OnMnuActionsAjouterOperation;
+            mnuActionsModifierOperation.Activated += OnMnuActionsModifierOperation;
+            mnuActionsSupprimerOperation.Activated += OnMnuActionsSupprimerOperation;
+            mnuActionsOpeRecurrentes.Activated += OnMnuActionsOpRecurrentes;
+            mnuActionsTransfert.Activated += OnMnuActionTransfert;
             mnuPointAPropos.Activated += OnMnuPointAPropos;
             mnuPointAide.Activated += OnMnuPointAide;
             mnuPointVerifierMaj.Activated += OnMnuPointVerifierMaj;
+            LanguesEvents();
             // events combobox
             cbListeComptes.Changed += OnCbListeComptesChanged;
             // events textbox
@@ -205,6 +225,12 @@ namespace RafCompta
                     strMsg += "\n\n";
                 strMsg += "Lecture fichier comptes: " + strMsg2;
             }
+            //
+			if (Global.Langue == Global.eLangue.it)
+				mnuPointLangueItalien.Active = true;
+			else if (Global.Langue == Global.eLangue.fr)
+				mnuPointLangueFrançais.Active = true;
+            SetCurrentCulture();
 			//
             UpdateCbListeComptes();
             UpdateData();
@@ -231,6 +257,101 @@ namespace RafCompta
                     }
                 }
             }
+        }
+
+        private void LanguesEvents(bool bAjout = true)
+        {
+            if (bAjout == true)
+            {
+                mnuPointLangueFrançais.Activated += OnMnuPointLangueFrançais;
+                mnuPointLangueItalien.Activated += OnMnuPointLangueItalien;
+            }
+            else
+            {
+                mnuPointLangueFrançais.Activated -= OnMnuPointLangueFrançais;
+                mnuPointLangueItalien.Activated -= OnMnuPointLangueItalien;
+            }
+        }
+
+        private void OnMnuPointLangueItalien(object sender, EventArgs e)
+        {
+            LanguesEvents(false);
+            //
+            Global.Langue = Global.eLangue.it;
+			mnuPointLangueItalien.Active = true;
+			mnuPointLangueFrançais.Active = false;
+			SetCurrentCulture();
+			Global.ConfigModified = true;
+            //
+            LanguesEvents();
+        }
+
+        private void OnMnuPointLangueFrançais(object sender, EventArgs e)
+        {
+            LanguesEvents(false);
+            //
+            Global.Langue = Global.eLangue.fr;
+			mnuPointLangueItalien.Active = false;
+			mnuPointLangueFrançais.Active = true;
+			SetCurrentCulture();
+			Global.ConfigModified = true;
+            //
+            LanguesEvents();
+        }
+
+        // Récupère les chaines associées aux clés, dans la culture active via le ResourceManager. 
+        private void GetTraductions()
+        {
+            if (Global.EnableFrancais || Global.EnableItalien)
+            {
+                mnuFichier.Label = Global.RmS.GetString("mnuFichier");
+                mnuFichierEnregistrer.Label = Global.RmS.GetString("mnuFichierEnregistrer");
+                mnuFichierEnregistrer.TooltipText = Global.RmS.GetString("mnuFichierEnregistrerTTT");
+                mnuFichierConsultArchive.Label = Global.RmS.GetString("mnuFichierConsultArchive");
+                mnuFichierConsultArchive.TooltipText = Global.RmS.GetString("mnuFichierConsultArchiveTTT");
+                mnuFichierQuitter.Label = Global.RmS.GetString("mnuFichierQuitter");
+                //
+                mnuActions.Label = Global.RmS.GetString("mnuActions");
+                mnuActionsAjouterCompte.Label = Global.RmS.GetString("mnuActionsAjouterCompte");
+                mnuActionsSupprimerCompte.Label = Global.RmS.GetString("mnuActionsSupprimerCompte");
+                mnuActionsAjouterOperation.Label = Global.RmS.GetString("mnuActionsAjouterOperation");
+                mnuActionsSupprimerOperation.Label = Global.RmS.GetString("mnuActionsSupprimerOperation");
+                mnuActionsModifierOperation.Label = Global.RmS.GetString("mnuActionsModifierOperation");
+                mnuActionsTransfert.Label = Global.RmS.GetString("mnuActionsTransfert");
+                mnuActionsTransfert.TooltipText = Global.RmS.GetString("mnuActionsTransfertTTT");
+                mnuActionsOpeRecurrentes.Label = Global.RmS.GetString("mnuActionsOpeRecurrentes");
+                mnuActionsOpeRecurrentes.TooltipText = Global.RmS.GetString("mnuActionsOpeRecurrentesTTT");
+                //
+                mnuPointLangue.Label = Global.RmS.GetString("mnuPointLangue");
+                mnuPointLangueFrançais.Label = Global.RmS.GetString("mnuPointLangueFrançais");
+                mnuPointLangueItalien.Label = Global.RmS.GetString("mnuPointLangueItalien");
+                mnuPointAide.Label = Global.RmS.GetString("mnuPointAide");
+                mnuPointAPropos.Label = Global.RmS.GetString("mnuPointAPropos");
+                mnuPointVerifierMaj.Label = Global.RmS.GetString("mnuPointVerifierMaj");
+                mnuPointVerifierMaj.TooltipText = Global.RmS.GetString("mnuPointVerifierMajTTT");
+                //
+                btnEnregistrer.TooltipText = Global.RmS.GetString("mnuFichierEnregistrerTTT");
+                btnConsulterArchives.TooltipText = Global.RmS.GetString("mnuFichierConsultArchiveTTT");
+                btnOpeRecurrentes.TooltipText = Global.RmS.GetString("mnuActionsOpeRecurrentesTTT");
+                btnTransfert.TooltipText = Global.RmS.GetString("mnuActionsTransfertTTT");
+            }
+        }
+
+        private void SetCurrentCulture()
+		{
+            if (Global.Langue == Global.eLangue.fr && Global.EnableFrancais == true)
+			{
+				Thread.CurrentThread.CurrentCulture = ciFrancaisCulture;// pour date, currency et double format
+				Thread.CurrentThread.CurrentUICulture = ciFrancaisCulture;// pour ressources
+			}
+            else if (Global.Langue == Global.eLangue.it && Global.EnableItalien == true)
+            {
+                Thread.CurrentThread.CurrentCulture = ciItalienCulture;
+                Thread.CurrentThread.CurrentUICulture = ciItalienCulture;
+            }
+            else
+				Thread.CurrentThread.CurrentCulture = ciCurrentCulture;// défaut
+            GetTraductions();
         }
 
         private void OnMnuPointVerifierMaj(object sender, EventArgs e)
@@ -516,7 +637,7 @@ namespace RafCompta
         // Menu 'Actions>Ajouter un compte'.
 		// <param name="sender"></param>
 		// <param name="e"></param>
-		void OnMnuActionsAjouterCompte(object sender, EventArgs e)
+		void OnmnuActionAjouterCompte(object sender, EventArgs e)
 		{
             string strMsg = string.Empty;
             string strFileName = string.Empty;

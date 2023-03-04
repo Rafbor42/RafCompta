@@ -40,6 +40,7 @@ using System.Xml;
 using System.Configuration;
 using Gtk;
 using System.IO;
+using System.Resources;
 
 namespace RafCompta
 {
@@ -48,6 +49,16 @@ namespace RafCompta
 	/// </summary>
 	public static class Global
 	{
+		// ressource manager
+		private static ResourceManager rmStrings = new ResourceManager("RafCompta.resources.Strings", System.Reflection.Assembly.GetExecutingAssembly());
+		public enum eLangue
+		{
+			fr,
+			it
+		}
+		private static eLangue meLangue;
+		static bool bEnableItalien;
+		static bool bEnableFrancais;
 		public struct sCompte
 		{
 			public string strNomCompte;
@@ -89,6 +100,10 @@ namespace RafCompta
         public static short KeyOpeRecur { get => nKeyOpeRecur; set => nKeyOpeRecur = value; }
         public static string DernierCompteActif { get => strDernierCompteActif; set => strDernierCompteActif = value; }
 		public static string FichierConfigLocal { get => strFichierConfigLocal; set => strFichierConfigLocal = value; }
+		public static ResourceManager RmS { get => rmStrings; set => rmStrings = value; }
+		public static eLangue Langue { get => meLangue; set => meLangue = value; }
+        public static bool EnableFrancais { get => bEnableFrancais; set => bEnableFrancais = value; }
+		public static bool EnableItalien { get => bEnableItalien; set => bEnableItalien = value; }
 
         public enum eTrvOperationsCols
 		{
@@ -117,6 +132,9 @@ namespace RafCompta
 		static void InitParams()
 		{
 			arComptes = new ArrayList();
+			Langue = eLangue.fr;
+			EnableItalien = true;
+			EnableFrancais = true;
 			//
 			ChargeFichierAuto = true;
 			SauveFichierAuto = true;
@@ -195,6 +213,7 @@ namespace RafCompta
 		public static void LireConfigLocal(ref string strMsg)
 		{
 			XmlTextReader reader = null;
+			string str;
         	try
         	{
 				// config au niveau utilisateur
@@ -205,6 +224,13 @@ namespace RafCompta
 					{
 						switch (reader.Name)
 						{
+							case "Langue":
+								str = reader.GetAttribute("value");
+								if (str.Equals("it", StringComparison.CurrentCultureIgnoreCase) == true)
+									Langue = eLangue.it;
+								else // défaut
+									Langue = eLangue.fr;
+								break;
 							case "FichierDonneesComptes":
 								FichierDonneesComptes = reader.GetAttribute("value");
 								break;
@@ -269,6 +295,10 @@ namespace RafCompta
 				writer.WriteStartDocument(true);
 				writer.WriteStartElement("configuration");
 					writer.WriteStartElement("userSettings");
+						writer.WriteStartElement("Langue");
+						writer.WriteAttributeString("value", Langue.ToString());
+						writer.WriteEndElement();
+
 						writer.WriteStartElement("FichierDonneesComptes");
 						writer.WriteAttributeString("value", FichierDonneesComptes);
 						writer.WriteEndElement();

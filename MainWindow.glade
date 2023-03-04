@@ -47,10 +47,35 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-convert</property>
   </object>
+  <object class="GtkImage" id="image18">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-select-font</property>
+  </object>
+  <object class="GtkImage" id="image19">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-save</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="image20">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-quit</property>
+  </object>
+  <object class="GtkImage" id="image21">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-help</property>
+  </object>
+  <object class="GtkImage" id="image22">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-about</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
@@ -104,19 +129,16 @@
               <object class="GtkMenuItem" id="mnuFichier">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Fichier</property>
                 <child type="submenu">
                   <object class="GtkMenu">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuFichierEnregistrer">
-                        <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte actif</property>
-                        <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">image19</property>
+                        <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
@@ -128,10 +150,8 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuFichierConsultArchive">
-                        <property name="label" translatable="yes">Consulter archive</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Consulter les archives du compte actif</property>
                         <property name="image">image1</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
@@ -145,11 +165,10 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuFichierQuitter">
-                        <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">image20</property>
+                        <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
@@ -168,7 +187,6 @@
                     <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuActionsAjouterCompte">
-                        <property name="label" translatable="yes">Ajouter compte</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image2</property>
@@ -177,8 +195,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionSupprimerCompte">
-                        <property name="label" translatable="yes">Supprimer compte</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsSupprimerCompte">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image3</property>
@@ -193,8 +210,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionAjouterOperation">
-                        <property name="label" translatable="yes">Ajouter opération</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsAjouterOperation">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image4</property>
@@ -203,8 +219,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionSupprimerOperation">
-                        <property name="label" translatable="yes">Supprimer opération</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsSupprimerOperation">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image5</property>
@@ -213,8 +228,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionModifierOperation">
-                        <property name="label" translatable="yes">Modifier opération</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsModifierOperation">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image6</property>
@@ -229,22 +243,18 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionOpeRecurrentes">
-                        <property name="label" translatable="yes">Opérations récurrentes</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsOpeRecurrentes">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Gérer les opérations récurrentes du compte actif</property>
                         <property name="image">image11</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuActionTransfert">
-                        <property name="label" translatable="yes">Transfert entre comptes</property>
+                      <object class="GtkImageMenuItem" id="mnuActionsTransfert">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Effectuer un transfert depuis le compte actif vers un autre compte</property>
                         <property name="image">image15</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
@@ -264,31 +274,60 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="mnuPointAide">
-                        <property name="label">gtk-help</property>
+                      <object class="GtkImageMenuItem" id="mnuPointLangue">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">image18</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckMenuItem" id="mnuPointLangueFrançais">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkCheckMenuItem" id="mnuPointLangueItalien">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="mnuPointAide">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image21</property>
+                        <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuPointAPropos">
-                        <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">image22</property>
+                        <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="mnuPointVerifierMaj">
-                        <property name="label" translatable="yes">Vérifier mises à jour</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Recherche si une mise à jour est disponible</property>
                         <property name="image">image16</property>
                         <property name="use-stock">False</property>
                         <property name="always-show-image">True</property>
@@ -342,7 +381,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Enregistrer tous les fichiers du compte actif</property>
                 <property name="image">image12</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -354,7 +392,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Consulter les archives du compte actif</property>
                 <property name="image">image13</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -369,7 +406,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Gérer les opérations récurrentes du compte actif</property>
                 <property name="image">image14</property>
                 <property name="always-show-image">True</property>
               </object>
@@ -384,7 +420,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Effectuer un transfert depuis le compte actif vers un autre compte</property>
                 <property name="image">image17</property>
                 <property name="always-show-image">True</property>
               </object>
