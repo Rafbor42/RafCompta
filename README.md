@@ -159,21 +159,13 @@ L’application est développée en C# avec _Visual Studio Code_ sur PC Ubuntu, 
 _Gtk3_ est installé par défaut sur les systèmes Linux Ubuntu et Xubuntu.
 Pour utilisation sur système Windows, il faut installer _Gtk3_.
 
-La publication de l’application dans _Visual Studio Code_ peut se faire de 2 manières:
+Publication pour Linux de l’application dans _Visual Studio Code_, 2 solutions retenues:
+1. au format AppImage pour Linux, en lançant le script _publish-appimage_ (cf [Publish-AppImage](https://github.com/kuiperzone/Publish-AppImage) pour explications sur la configuration et l'utilisation). Le fichier AppImage généré se trouve dans le dossier _AppImages_.
+2. sous forme d'archive compressée, version autonome intégrant le _Runtime .NET 6_:</br>
+  ```dotnet publish -c Release -r linux-x64 --self-contained true```</br>
+  Récupérer le dossier _publish_ (situé dans le dossier _/bin/Release/net6.0/linux-x64/_ du projet), le renommer en _RafCompta_, puis le compresser au format _tar.xz_.
 
-1. version autonome intégrant le _Runtime .NET 6_</br>
-Linux: ```dotnet publish -c Release -r linux-x64 --self-contained true```</br>
-Windows: ```dotnet publish -c Release -r win-x64 --self-contained true```
-2. version minimale nécessitant l’installation du _Runtime .NET 6_ sur le PC de destination</br>
-Linux: ```dotnet publish -c Release -r linux-x64 --self-contained false```</br>
-Windows: ```dotnet publish -c Release -r win-x64 --self-contained false```</br>
-
-Pour déployer l'application en dehors de _Visual Studio Code_:
-
-- récupérer le dossier _publish_ (situé dans le dossier _/bin/Release/net6.0/_ du projet) et le renommer en _RafCompta_ (ou autre nom à votre convenance).
-- après copie du dossier _RafCompta_ sur le support de destination, donner les droits d'exécution au fichier _RafCompta_.
-- créer un lanceur comprenant en exécutable le fichier _RafCompta_.
-- l'icône de l'application (_comptabilite.png_) est disponible dans le dossier _images_.
+L'icône de l'application (_comptabilite.png_) est disponible dans le dossier _images_.
 
 ## Notes de version
 
