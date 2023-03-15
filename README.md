@@ -169,6 +169,8 @@ L'icône de l'application (_comptabilite.png_) est disponible dans le dossier _i
 
 ## Notes de version
 
+- **2.0.0315.0**
+  - Bugfix pour ne plus enregistrer plusieurs fois un transfert entre comptes.
 - **2.0.0303.0**
   - Bugfix lors du rapprochement d'opérations récurrentes saisies le mois précédent.
   - Publication sous forme d'AppImage. 
@@ -200,7 +202,7 @@ L'icône de l'application (_comptabilite.png_) est disponible dans le dossier _i
 
 - **Linux**: 
   - fichier AppImage: voir [Releases](https://github.com/Rafbor42/RafCompta/releases).
-  - archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0303.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0303.0_avec_runtime.tar.xz)
+  - archive _tar.xz_ incluant le Runtime _.NET 6_: [v2.0.0315.0](https://e-nautia.com/rafbor/disk/RafCompta/RafCompta_2.0.0315.0_avec_runtime.tar.xz)
 
 ### Installation sur Linux
 
