@@ -1000,6 +1000,9 @@ namespace RafCompta
 					}
 				}
 			}
+			//
+			if (strMsg == string.Empty)
+				dtTableOperationsTransfert.Clear();
         }
 
         public short GetNbOperationsAVenir()
